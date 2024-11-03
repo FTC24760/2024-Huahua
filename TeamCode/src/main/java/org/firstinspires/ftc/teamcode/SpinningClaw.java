@@ -26,6 +26,7 @@ public class SpinningClaw extends OpMode {
         } else if (gamepad1.x) {
             spinServo.setPosition(1.0);
         }
+
     }
 
     public void stop() {

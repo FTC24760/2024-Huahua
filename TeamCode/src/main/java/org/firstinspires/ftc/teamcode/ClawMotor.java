@@ -12,8 +12,8 @@ public class ClawMotor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        clawmotor1 = hardwareMap.get(DcMotor.class, "clawmotor1");
-        clawmotor2 = hardwareMap.get(DcMotor.class, "clawmotor2");
+        clawmotor1 = hardwareMap.get(DcMotor.class, "clawmotor1"); //on port 0, the motor at the very top
+        clawmotor2 = hardwareMap.get(DcMotor.class, "clawmotor2"); //on port 3, the second motor
 
         clawmotor1.setDirection(DcMotor.Direction.FORWARD);
         clawmotor2.setDirection(DcMotor.Direction.FORWARD);
@@ -23,7 +23,7 @@ public class ClawMotor extends LinearOpMode {
         while (opModeIsActive()) {
             if(gamepad1.b) {
                 clawmotor1.setTargetPosition(5000);
-                clawmotor2.setTargetPosition(5000);
+                clawmotor2.setTargetPosition(-5000);
 
                 clawmotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 clawmotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
