@@ -46,6 +46,8 @@ public class IntoTheDeep extends LinearOpMode {
         float driveRX;
         double driveDenominator;
 
+        float inputType = 1;
+
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -73,9 +75,9 @@ public class IntoTheDeep extends LinearOpMode {
             // Drive
             float driveDampen = 0.4f;
 
-            driveY = -gamepad1.left_stick_y * driveDampen;
-            driveX = gamepad1.left_stick_x * driveDampen;
-            driveRX = gamepad1.right_stick_x * driveDampen;
+            driveY = gamepad1.left_stick_y * driveDampen * inputType;
+            driveX = -gamepad1.left_stick_x * driveDampen * inputType;
+            driveRX = gamepad1.right_stick_x * driveDampen * inputType;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
 
@@ -97,9 +99,9 @@ public class IntoTheDeep extends LinearOpMode {
 
             // Top Arm
             if (gamepad1.x) {
-                topArm.setPower(0.5);
-            } else if (gamepad1.y) {
                 topArm.setPower(-0.5);
+            } else if (gamepad1.y) {
+                topArm.setPower(0.5);
             } else {
                 topArm.setPower(0.0);
             }
@@ -127,15 +129,24 @@ public class IntoTheDeep extends LinearOpMode {
             telemetry.addData("Wrist Spin", "DPad Left/Right");
 
             // Claw
-            if (gamepad1.left_bumper) {
-                clawLeft.setPosition(0.7);
-                clawRight.setPosition(0.3);
-            } else if (gamepad1.right_bumper) {
-                clawLeft.setPosition(0.3);
-                clawRight.setPosition(0.7);
+            if (gamepad1.right_bumper) {
+                clawLeft.setPosition(0.22);
+                clawRight.setPosition(0.78);
+            } else if (gamepad1.left_bumper) {
+                clawLeft.setPosition(1.0);
+                clawRight.setPosition(0.0);
             }
 
             telemetry.addData("Claw", "RB/open - LB/close");
+
+            // REVERSE drive
+            if (gamepad1.dpad_up) {
+                inputType = 1;
+            } else if (gamepad1.dpad_down) {
+                inputType = -1;
+            }
+
+            telemetry.addData("Drive Direction", "DPad Up/Down");
 
             // Add all telemetry
             telemetry.update();
