@@ -94,7 +94,7 @@ public class IntoTheDeepRevamped extends LinearOpMode {
             if (gamepad1.a) {
                 leftSlide.setPower(0.5);
                 rightSlide.setPower(0.5);
-            } else {
+            } else if (gamepad1.b ) {
                 leftSlide.setPower(-0.3);
                 rightSlide.setPower(-0.3);
             }
@@ -104,9 +104,9 @@ public class IntoTheDeepRevamped extends LinearOpMode {
 
             // Top Arm
             if (gamepad1.right_trigger > 0) {
-                topArm.setPower(-0.5);  // Move forward
+                topArm.setPower(-0.4);  // Move forward
             } else if (gamepad1.right_bumper) {
-                topArm.setPower(0.5);  // Move backward
+                topArm.setPower(0.4);  // Move backward
             } else {
                 topArm.setPower(0.0);  // Stop
             }
@@ -133,6 +133,8 @@ public class IntoTheDeepRevamped extends LinearOpMode {
 
             telemetry.addData("Wrist Spin", "DPad Left/Right");
 
+
+            //claw
             if (gamepad1.x && !xPressed) {
                 clawOpen = !clawOpen;
                 xPressed = true;
