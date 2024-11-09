@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+//TODO Map the distance sensor onto the control hub
+
 @Autonomous(name = "Distance Sensor Trials")
 public class distancesensor extends LinearOpMode {
     private DcMotor frontRight;
