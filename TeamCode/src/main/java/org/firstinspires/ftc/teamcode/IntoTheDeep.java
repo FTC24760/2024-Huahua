@@ -76,7 +76,7 @@ public class IntoTheDeep extends LinearOpMode {
 
             driveY = gamepad1.left_stick_y * driveDampen * inputType;
             driveX = -gamepad1.left_stick_x * driveDampen * inputType;
-            driveRX = gamepad1.right_stick_x * driveDampen * inputType;
+            driveRX = -gamepad1.right_stick_x * driveDampen;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
 
