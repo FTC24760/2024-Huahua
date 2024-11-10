@@ -13,17 +13,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class DriveForwardAndReturn extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        // Initialize your MecanumDrive
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-
-        // Define the starting pose (assumed to be at the origin facing forward)
         Pose2d startPose = new Pose2d(0, 0, 0);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, startPose);
 
-        Action go = drive.actionBuilder(startPose)
+
+        TrajectoryActionBuilder go = drive.actionBuilder(startPose)
                 .lineToX(500)
                 .waitSeconds(3)
-                .splineTo(new Vector2d(0, 0), Math.toRadians(180))
-                .build();
+                .splineTo(new Vector2d(0, 0), Math.toRadians(180));
 
 
         // Wait for the start command
@@ -32,6 +29,6 @@ public class DriveForwardAndReturn extends LinearOpMode {
         if (isStopRequested()) return;
 
         // Follow the forward trajectory
-        Actions.runBlocking(go);
+        Actions.runBlocking(go.build());
     }
 }
