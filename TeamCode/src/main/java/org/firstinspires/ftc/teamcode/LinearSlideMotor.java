@@ -17,8 +17,8 @@ public class LinearSlideMotor extends OpMode {
 
     public void loop() {
         if (gamepad1.a) {
-            LSlideMotor.setPower(0.2);
-            RSlideMotor.setPower(-0.2);
+            LSlideMotor.setPower(0.5);
+            RSlideMotor.setPower(-0.5);
         } else {
             LSlideMotor.setPower(0.0);
             RSlideMotor.setPower(0.0);
