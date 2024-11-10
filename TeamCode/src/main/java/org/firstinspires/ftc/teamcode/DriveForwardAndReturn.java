@@ -9,7 +9,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name = "DriveForwardAndReturn", group = "Autonomous")
+@Autonomous(name = "Drive Forward And Return", group = "Autonomous")
 public class DriveForwardAndReturn extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
