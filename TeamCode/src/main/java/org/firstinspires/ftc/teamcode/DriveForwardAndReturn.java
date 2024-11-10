@@ -20,7 +20,7 @@ public class DriveForwardAndReturn extends LinearOpMode {
         Pose2d startPose = new Pose2d(0, 0, 0);
 
         Action go = drive.actionBuilder(startPose)
-                .lineToX(5000)
+                .lineToX(500)
                 .waitSeconds(3)
                 .splineTo(new Vector2d(0, 0), Math.toRadians(180))
                 .build();
@@ -32,8 +32,6 @@ public class DriveForwardAndReturn extends LinearOpMode {
         if (isStopRequested()) return;
 
         // Follow the forward trajectory
-        Actions.runBlocking(
-                go
-        );
+        Actions.runBlocking(go);
     }
 }
