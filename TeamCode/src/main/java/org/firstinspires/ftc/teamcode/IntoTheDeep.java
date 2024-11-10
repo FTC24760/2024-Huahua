@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 import com.qualcomm.robotcore.hardware.Servo;
-
+/*
 @TeleOp(name = "Into The Deep 2025")
 public class IntoTheDeep extends OpMode {
     //ClawMotor
@@ -52,3 +52,4 @@ public class IntoTheDeep extends OpMode {
 
 
 }
+*/
