@@ -12,14 +12,28 @@ public final class TestSpline extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Pose2d beginPose = new Pose2d(0, 0, 0);
             MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+            telemetry.addData("Status", "Idle");
+            telemetry.update();
 
             waitForStart();
+            telemetry.addData("Status", "Running");
+            telemetry.update();
 
             Actions.runBlocking(
                     drive.actionBuilder(beginPose)
                             .splineTo(new Vector2d(30, 30), Math.PI / 2)
-                            .splineTo(new Vector2d(0, 60), Math.PI)
                             .build());
+            telemetry.addData("Status", "Ran First Task");
+            telemetry.update();
+            Actions.runBlocking(
+                drive.actionBuilder(beginPose)
+                        .splineTo(new Vector2d(0, 60), Math.PI)
+                        .build());
+            telemetry.addData("Status", "Ran Second Task");
+            telemetry.update();
+
+            telemetry.addData("Status", "Done");
+            telemetry.update();
 
     }
 }
