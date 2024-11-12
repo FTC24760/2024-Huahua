@@ -46,8 +46,7 @@ public class IntoTheDeepRevamped extends LinearOpMode {
         float driveRX;
         double driveDenominator;
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        /
 
         // Slide
         leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
