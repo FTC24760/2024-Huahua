@@ -34,6 +34,8 @@ public class IntoTheDeepRevamped extends LinearOpMode {
     private Servo clawLeft;
     private Servo clawRight;
 
+    static final int SLIDE_MAX_POSITION = 100;
+
     @Override
     public void runOpMode() {
         // Drive
@@ -53,8 +55,6 @@ public class IntoTheDeepRevamped extends LinearOpMode {
         leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
         rightSlide = hardwareMap.get(DcMotor.class, "rightSlide");
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        float powerUp;
-        float powerDown;
 
         // Top Arm
         topArm = hardwareMap.get(DcMotor.class, "topArm");
@@ -67,9 +67,13 @@ public class IntoTheDeepRevamped extends LinearOpMode {
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
+        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         boolean clawOpen = false;
         boolean xPressed = false;
-
 
         waitForStart();
         while (opModeIsActive()) {
@@ -92,11 +96,38 @@ public class IntoTheDeepRevamped extends LinearOpMode {
 
             // Slide
             if (gamepad1.a) {
-                leftSlide.setPower(0.5);
-                rightSlide.setPower(0.5);
-            } else if (gamepad1.b ) {
-                leftSlide.setPower(-0.3);
-                rightSlide.setPower(-0.3);
+
+                leftSlide.setTargetPosition(SLIDE_MAX_POSITION);
+                rightSlide.setTargetPosition(SLIDE_MAX_POSITION);
+
+                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftSlide.setPower(0.75);
+                rightSlide.setPower(0.75);
+
+                while (opModeIsActive() && (leftSlide.isBusy() || rightSlide.isBusy())) {
+                    telemetry.addData("Left Slide Position", leftSlide.getCurrentPosition());
+                    telemetry.addData("Right Slide Position", rightSlide.getCurrentPosition());
+                    telemetry.update();
+                }
+
+                leftSlide.setPower(0);
+                rightSlide.setPower(0);
+
+                leftSlide.setTargetPosition(leftSlide.getCurrentPosition());
+                rightSlide.setTargetPosition(rightSlide.getCurrentPosition());
+
+                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                rightSlide.setPower(0.3);
+                leftSlide.setPower(0.3);
+            }
+
+            } if (gamepad1.b) {
+                leftSlide.setPower(-0.2);
+                rightSlide.setPower(-0.2);
             }
 
             telemetry.addData("Slide", "a/UP - let go of a/DOWN");
