@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "Revamped TELEOP")
-public class IntoTheDeepRevamped extends LinearOpMode {
+@TeleOp(name = "Rotation Test NEW")
+public class NewRobotRotationTest extends LinearOpMode {
     // Mecanum Drive
     private DcMotor frontRight;
     private DcMotor backRight;
@@ -21,11 +21,9 @@ public class IntoTheDeepRevamped extends LinearOpMode {
     private DcMotor leftSlide;
     private DcMotor rightSlide;
 
-    // Top Arm
-    private DcMotor topArm;
-
-    // Bottom Arm
-    private DcMotor bottomArm;
+    // Rotating Things
+    private DcMotor leftRotate;
+    private DcMotor rightRotate;
 
     // Wrist Spin
     private Servo wrist;
@@ -46,7 +44,10 @@ public class IntoTheDeepRevamped extends LinearOpMode {
         float driveRX;
         double driveDenominator;
 
+        float inputType = 1;
 
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Slide
         leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
@@ -55,28 +56,23 @@ public class IntoTheDeepRevamped extends LinearOpMode {
         float powerUp;
         float powerDown;
 
-        // Top Arm
-        topArm = hardwareMap.get(DcMotor.class, "topArm");
+        // Rotation
+        leftRotate = hardwareMap.get(DcMotor.class, "leftRotate");
+        rightRotate = hardwareMap.get(DcMotor.class, "rightRotate");
 
-        // Bottom Arm
-        bottomArm = hardwareMap.get(DcMotor.class, "bottomArm");
 
         // Wrist & Claw
         wrist = hardwareMap.get(Servo.class, "wrist");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
-        boolean clawOpen = false;
-        boolean xPressed = false;
-
-
         waitForStart();
         while (opModeIsActive()) {
             // Drive
             float driveDampen = 0.4f;
 
-            driveY = -gamepad1.left_stick_y * driveDampen;
-            driveX = gamepad1.left_stick_x * driveDampen;
+            driveY = gamepad1.left_stick_y * driveDampen * inputType;
+            driveX = -gamepad1.left_stick_x * driveDampen * inputType;
             driveRX = -gamepad1.right_stick_x * driveDampen;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
@@ -88,40 +84,28 @@ public class IntoTheDeepRevamped extends LinearOpMode {
 
             telemetry.addData("Drive Controls", "Left and Right Joysticks");
 
-
             // Slide
-            if (gamepad1.a) {
-                leftSlide.setPower(0.5);
-                rightSlide.setPower(0.5);
+            powerUp = gamepad1.right_trigger;
+            powerDown = gamepad1.left_trigger;
+
+            leftSlide.setPower(powerUp - powerDown);
+            rightSlide.setPower(powerUp - powerDown);
+
+            telemetry.addData("Slide", "RT/up - LT/down");
+
+            // Rotations
+            if (gamepad1.y) {
+                leftRotate.setPower(1);
+                rightRotate.setPower(1);
+            } else if (gamepad1.x) {
+                leftRotate.setPower(-1);
+                rightRotate.setPower(-1);
             } else {
-                leftSlide.setPower(-0.3);
-                rightSlide.setPower(-0.3);
+                leftRotate.setPower(0);
+                rightRotate.setPower(0);
             }
 
-            telemetry.addData("Slide", "a/UP - let go of a/DOWN");
-
-
-            // Top Arm
-            if (gamepad1.right_trigger > 0) {
-                topArm.setPower(-0.5);  // Move forward
-            } else if (gamepad1.right_bumper) {
-                topArm.setPower(0.5);  // Move backward
-            } else {
-                topArm.setPower(0.0);  // Stop
-            }
-
-            telemetry.addData("Top Arm", "Right Trigger/Up - Right Bumper/Down");
-
-            // Bottom Arm
-            if (gamepad1.left_trigger > 0) {
-                bottomArm.setPower(0.5);
-            } else if (gamepad1.left_bumper) {
-                bottomArm.setPower(-0.5);
-            } else {
-                bottomArm.setPower(0.0);
-            }
-
-            telemetry.addData("Bottom Arm", "Left trigger/Up - Left Bumper/Down");
+            telemetry.addData("Rotation", "Y/X");
 
             // Wrist Spinning
             if (gamepad1.dpad_left) {
@@ -132,23 +116,25 @@ public class IntoTheDeepRevamped extends LinearOpMode {
 
             telemetry.addData("Wrist Spin", "DPad Left/Right");
 
-            if (gamepad1.x && !xPressed) {
-                clawOpen = !clawOpen;
-                xPressed = true;
-            } else if (!gamepad1.x) {
-                xPressed = false;
-            }
-
             // Claw
-            if (clawOpen) {
-                clawLeft.setPosition(0.7);
-                clawRight.setPosition(0.3);
-            } else {
-                clawLeft.setPosition(0.3);
-                clawRight.setPosition(0.7);
+            if (gamepad1.right_bumper) {
+                clawLeft.setPosition(0.22);
+                clawRight.setPosition(0.78);
+            } else if (gamepad1.left_bumper) {
+                clawLeft.setPosition(1.0);
+                clawRight.setPosition(0.0);
             }
 
-            telemetry.addData("Claw", "X toggle");
+            telemetry.addData("Claw", "RB/open - LB/close");
+
+            // REVERSE drive
+            if (gamepad1.dpad_up) {
+                inputType = 1;
+            } else if (gamepad1.dpad_down) {
+                inputType = -1;
+            }
+
+            telemetry.addData("Drive Direction", "DPad Up/Down");
 
             // Add all telemetry
             telemetry.update();

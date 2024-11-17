@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "FULL TeleOp Into The Deep 2025")
-public class IntoTheDeep extends LinearOpMode {
+@TeleOp(name = "Old intothedeep")
+public class OldIntoTheDeep extends LinearOpMode {
     // Mecanum Drive
     private DcMotor frontRight;
     private DcMotor backRight;
