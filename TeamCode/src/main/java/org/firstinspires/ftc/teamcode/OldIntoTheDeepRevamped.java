@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "Revamped TELEOP")
-public class IntoTheDeepRevamped extends LinearOpMode {
+@TeleOp(name = "old revamped")
+public class OldIntoTheDeepRevamped extends LinearOpMode {
     // Mecanum Drive
     private DcMotor frontRight;
     private DcMotor backRight;
@@ -48,8 +48,7 @@ public class IntoTheDeepRevamped extends LinearOpMode {
         float driveRX;
         double driveDenominator;
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         // Slide
         leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");

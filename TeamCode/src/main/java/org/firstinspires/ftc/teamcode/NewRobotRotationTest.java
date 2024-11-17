@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "FULL TeleOp Into The Deep 2025")
-public class IntoTheDeep extends LinearOpMode {
+@TeleOp(name = "Rotation Test NEW")
+public class NewRobotRotationTest extends LinearOpMode {
     // Mecanum Drive
     private DcMotor frontRight;
     private DcMotor backRight;
@@ -21,11 +21,9 @@ public class IntoTheDeep extends LinearOpMode {
     private DcMotor leftSlide;
     private DcMotor rightSlide;
 
-    // Top Arm
-    private DcMotor topArm;
-
-    // Bottom Arm
-    private DcMotor bottomArm;
+    // Rotating Things
+    private DcMotor leftRotate;
+    private DcMotor rightRotate;
 
     // Wrist Spin
     private Servo wrist;
@@ -58,11 +56,10 @@ public class IntoTheDeep extends LinearOpMode {
         float powerUp;
         float powerDown;
 
-        // Top Arm
-        topArm = hardwareMap.get(DcMotor.class, "topArm");
+        // Rotation
+        leftRotate = hardwareMap.get(DcMotor.class, "leftRotate");
+        rightRotate = hardwareMap.get(DcMotor.class, "rightRotate");
 
-        // Bottom Arm
-        bottomArm = hardwareMap.get(DcMotor.class, "bottomArm");
 
         // Wrist & Claw
         wrist = hardwareMap.get(Servo.class, "wrist");
@@ -76,7 +73,7 @@ public class IntoTheDeep extends LinearOpMode {
 
             driveY = gamepad1.left_stick_y * driveDampen * inputType;
             driveX = -gamepad1.left_stick_x * driveDampen * inputType;
-            driveRX = gamepad1.right_stick_x * driveDampen * inputType;
+            driveRX = -gamepad1.right_stick_x * driveDampen;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
 
@@ -96,27 +93,19 @@ public class IntoTheDeep extends LinearOpMode {
 
             telemetry.addData("Slide", "RT/up - LT/down");
 
-            // Top Arm
-            if (gamepad1.x) {
-                topArm.setPower(-0.5);
-            } else if (gamepad1.y) {
-                topArm.setPower(0.5);
+            // Rotations
+            if (gamepad1.y) {
+                leftRotate.setPower(1);
+                rightRotate.setPower(1);
+            } else if (gamepad1.x) {
+                leftRotate.setPower(-1);
+                rightRotate.setPower(-1);
             } else {
-                topArm.setPower(0.0);
+                leftRotate.setPower(0);
+                rightRotate.setPower(0);
             }
 
-            telemetry.addData("Top Arm", "X/down - Y/up");
-
-            // Bottom Arm
-            if (gamepad1.a) {
-                bottomArm.setPower(0.5);
-            } else if (gamepad1.b) {
-                bottomArm.setPower(-0.5);
-            } else {
-                bottomArm.setPower(0.0);
-            }
-
-            telemetry.addData("Bottom Arm", "A/down - B/up");
+            telemetry.addData("Rotation", "Y/X");
 
             // Wrist Spinning
             if (gamepad1.dpad_left) {
