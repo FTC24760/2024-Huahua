@@ -58,11 +58,7 @@ public class OldIntoTheDeep extends LinearOpMode {
         float powerUp;
         float powerDown;
 
-        // Top Arm
-        topArm = hardwareMap.get(DcMotor.class, "topArm");
 
-        // Bottom Arm
-        bottomArm = hardwareMap.get(DcMotor.class, "bottomArm");
 
         // Wrist & Claw
         wrist = hardwareMap.get(Servo.class, "wrist");
@@ -96,27 +92,6 @@ public class OldIntoTheDeep extends LinearOpMode {
 
             telemetry.addData("Slide", "RT/up - LT/down");
 
-            // Top Arm
-            if (gamepad1.x) {
-                topArm.setPower(-0.5);
-            } else if (gamepad1.y) {
-                topArm.setPower(0.5);
-            } else {
-                topArm.setPower(0.0);
-            }
-
-            telemetry.addData("Top Arm", "X/down - Y/up");
-
-            // Bottom Arm
-            if (gamepad1.a) {
-                bottomArm.setPower(0.5);
-            } else if (gamepad1.b) {
-                bottomArm.setPower(-0.5);
-            } else {
-                bottomArm.setPower(0.0);
-            }
-
-            telemetry.addData("Bottom Arm", "A/down - B/up");
 
             // Wrist Spinning
             if (gamepad1.dpad_left) {
