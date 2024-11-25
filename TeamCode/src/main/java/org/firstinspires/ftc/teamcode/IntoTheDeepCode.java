@@ -32,8 +32,8 @@ Still available buttons:
 
 
 */
-@TeleOp(name = "Old Revamped Into the Deep")
-public class OldIntoTheDeepRevamped extends LinearOpMode {
+@TeleOp(name = "2024 INTO THE DEEP CODE")
+public class IntoTheDeepCode extends LinearOpMode {
     // Mecanum Drive
     private DcMotor frontRight;
     private DcMotor backRight;
@@ -83,6 +83,8 @@ public class OldIntoTheDeepRevamped extends LinearOpMode {
 
         leftRotate = hardwareMap.get(DcMotor.class, "leftRotate");
         rightRotate = hardwareMap.get(DcMotor.class, "rightRotate");
+
+        rightRotate.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wrist & Claw
         wrist = hardwareMap.get(Servo.class, "wrist");
@@ -137,16 +139,9 @@ public class OldIntoTheDeepRevamped extends LinearOpMode {
                 leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
                 leftSlide.setPower(1);
                 rightSlide.setPower(1);
-
-                while (opModeIsActive() && (leftSlide.isBusy() || rightSlide.isBusy())) {
-                    telemetry.addData("Left Slide Position", leftSlide.getCurrentPosition());
-                    telemetry.addData("Right Slide Position", rightSlide.getCurrentPosition());
-                }
-
-                leftSlide.setPower(0);
-                rightSlide.setPower(0);
 
             }
 
@@ -155,40 +150,35 @@ public class OldIntoTheDeepRevamped extends LinearOpMode {
             if (gamepad1.right_trigger > 0) {
                 leftRotate.setPower(1);
                 rightRotate.setPower(1);
+            } else if (gamepad1.left_trigger > 0) {
+                leftRotate.setPower(-1);
+                rightRotate.setPower(-1);
             }
             else {
                 leftRotate.setPower(0.0);
                 rightRotate.setPower(0.0);
             }
 
-            if (gamepad1.left_trigger > 0) {
-                leftRotate.setPower(-1);
-                rightRotate.setPower(-1);
-            }
-            else {
-                leftRotate.setPower(0.0);
-                rightRotate.setPower(0);
-            }
 
             telemetry.addData("Slide Back and Forth", "Right Trigger and Left Trigger");
 
             // Wrist Spinning
             if (gamepad1.dpad_left) {
-                if (wrist_position < 1) {
+                if (wrist_position > 0) {
                     wrist_position -= 0.001;
                 }
             } else if (gamepad1.dpad_right) {
-                if (wrist_position > 0) {
+                if (wrist_position < 1) {
                     wrist_position += 0.001;
                 }
             }
 
             if (gamepad1.dpad_up) {
-                if (updown_wrist_position < 1) {
+                if (updown_wrist_position > 0) {
                     updown_wrist_position -= 0.001;
                 }
             } else if (gamepad1.dpad_down) {
-                if (updown_wrist_position > 0) {
+                if (updown_wrist_position < 1) {
                     updown_wrist_position += 0.001;
                 }
             }
