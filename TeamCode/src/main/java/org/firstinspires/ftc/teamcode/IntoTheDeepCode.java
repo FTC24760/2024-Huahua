@@ -57,6 +57,10 @@ public class IntoTheDeepCode extends LinearOpMode {
     private Servo clawRight;
 
     static final int SLIDE_MAX_POSITION = 2000;
+    static final int SLIDE_PICKUP_POSITION = 1000; //CHANGE
+    static final int SLIDE_NEUTRAL_POSITION = 0;
+
+
     private double wrist_position = 0.5;
 
     private double updown_wrist_position = 0.5;
@@ -94,6 +98,9 @@ public class IntoTheDeepCode extends LinearOpMode {
 
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         boolean clawOpen = false;
@@ -148,11 +155,11 @@ public class IntoTheDeepCode extends LinearOpMode {
             telemetry.addData("Slide", "a/UP - b/DOWN");
 
             if (gamepad1.right_trigger > 0) {
-                leftRotate.setPower(1);
-                rightRotate.setPower(1);
+                leftRotate.setPower(-0.66);
+                rightRotate.setPower(-0.66);
             } else if (gamepad1.left_trigger > 0) {
-                leftRotate.setPower(-1);
-                rightRotate.setPower(-1);
+                leftRotate.setPower(0.66);
+                rightRotate.setPower(0.66);
             }
             else {
                 leftRotate.setPower(0.0);
@@ -209,32 +216,53 @@ public class IntoTheDeepCode extends LinearOpMode {
 
 
             if (gamepad1.y) {
-                leftRotate.setTargetPosition(500); //change
+                rightRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
+                leftRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
+                rightRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                leftRotate.setPower(0.75);
+                rightRotate.setPower(0.6);
+                leftRotate.setPower(0.6);
 
-                leftSlide.setTargetPosition(SLIDE_MAX_POSITION);
-                rightSlide.setTargetPosition(SLIDE_MAX_POSITION);
-                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                leftSlide.setTargetPosition(SLIDE_MAX_POSITION);
+//                rightSlide.setTargetPosition(SLIDE_MAX_POSITION);
+//                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//                leftSlide.setPower(-0.75);
+//                rightSlide.setPower(-0.75);
+
+                clawLeft.setPosition(0.7);
+                clawRight.setPosition(0.3);
+
+
+
+            }
+
+            if (gamepad1.left_bumper) { //puts the robot in a neutral position
+                leftSlide.setTargetPosition(0);
+                rightSlide.setTargetPosition(0);
+
                 leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                leftSlide.setPower(0.75);
-                rightSlide.setPower(0.75);
 
-                while (leftRotate.isBusy() || rightSlide.isBusy() || leftSlide.isBusy()) {
-                    telemetry.addData("Left Rotate Pos", leftRotate.getCurrentPosition());
-                    telemetry.addData("Right Slide Pos", rightSlide.getCurrentPosition());
-                    telemetry.addData("Left Slide Pos", leftSlide.getCurrentPosition());
+                leftSlide.setPower(1);
+                rightSlide.setPower(1);
+
+                while (leftSlide.isBusy() || rightSlide.isBusy()) {
+                    sleep(1);
                 }
 
-                leftRotate.setPower(0);
-                leftSlide.setPower(0.3);
-                rightSlide.setPower(0.3);
+                leftRotate.setTargetPosition(SLIDE_NEUTRAL_POSITION);
+                rightRotate.setTargetPosition(SLIDE_NEUTRAL_POSITION);
 
-                leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftRotate.setPower(0.5);
+                rightRotate.setPower(0.5);
+
             }
 
             // Add all telemetry
