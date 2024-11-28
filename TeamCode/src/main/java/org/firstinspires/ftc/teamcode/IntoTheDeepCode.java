@@ -103,8 +103,6 @@ public class IntoTheDeepCode extends LinearOpMode {
 
         leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftRotate.setTargetPosition(0);
-        rightRotate.setTargetPosition(0);
         leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -159,13 +157,32 @@ public class IntoTheDeepCode extends LinearOpMode {
 
             }
 
+
+
             telemetry.addData("Slide", "a/UP - b/DOWN");
+
+            if (gamepad1.x && !xPressed) {
+                clawOpen = !clawOpen;
+                xPressed = true;
+            } else if (!gamepad1.x) {
+                xPressed = false;
+            }
+
+            //if statement determining whether or not the claw is open
+            if (clawOpen) {
+                clawLeft.setPosition(0.7);
+                clawRight.setPosition(0.3);
+            } else {
+                clawLeft.setPosition(0.3);
+                clawRight.setPosition(0.7);
+            }
+
+            telemetry.addData("Claw", "X toggle");
+
 
             if (gamepad1.right_trigger > 0) {
                 leftRotate.setPower(-0.66);
                 rightRotate.setPower(-0.66);
-                telemetry.addData("LeftRotate Position", leftRotate.getCurrentPosition());
-                telemetry.addData("RightRotate Position", rightRotate.getCurrentPosition());
 
             } else if (gamepad1.left_trigger > 0) {
                 leftRotate.setPower(0.66);
@@ -191,7 +208,7 @@ public class IntoTheDeepCode extends LinearOpMode {
 ////
 ////                leftSlide.setPower(-0.75);
 ////                rightSlide.setPower(-0.75);
-//
+//a
 //                clawLeft.setPosition(0.7);
 //                clawRight.setPosition(0.3);
 //
@@ -199,23 +216,33 @@ public class IntoTheDeepCode extends LinearOpMode {
 //
             if (gamepad1.right_bumper) {
 
-                int SLIDE_PICKUP_POSITION = leftRotate.getCurrentPosition() + 1000;
+                int SLIDE_PICKUP_POSITION = -2265;
 
-                rightRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
+                rightRotate.setTargetPosition(0);
                 leftRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
 
                 rightRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+                leftRotate.setPower(-1);
+                rightRotate.setPower(-1);
+
                 while (leftRotate.isBusy() || rightRotate.isBusy()) {
                 }
 
-                // Stop motors once the target is reached
-                leftRotate.setPower(0.0);
-                rightRotate.setPower(0.0);
+                leftRotate.setPower(0);
+                rightRotate.setPower(0);
 
-                clawLeft.setPosition(0.7);
-                clawRight.setPosition(0.3);
+
+//                while (leftRotate.isBusy() || rightRotate.isBusy()) {
+//                }
+//
+//                // Stop motors once the target is reached
+//                leftRotate.setPower(0.0);
+//                rightRotate.setPower(0.0);
+//
+//                clawLeft.setPosition(0.7);
+//                clawRight.setPosition(0.3);
             }
 
 
@@ -252,41 +279,9 @@ public class IntoTheDeepCode extends LinearOpMode {
             }
 
 
-            if (gamepad1.x) {
-                int SLIDE_PICKUP_POSITION = leftRotate.getCurrentPosition() + 1000;
+            telemetry.addData("LeftRotate Position", leftRotate.getCurrentPosition());
+            telemetry.addData("RightRotate Position", rightRotate.getCurrentPosition());
 
-                rightRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
-                leftRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
-
-                rightRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                while (leftRotate.isBusy() || rightRotate.isBusy()) {
-                }
-
-
-                rightSlide.setTargetPosition(SLIDE_MAX_POSITION);
-                leftSlide.setTargetPosition(SLIDE_MAX_POSITION);
-
-                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                leftSlide.setPower(-1);
-                rightSlide.setPower(-1);
-
-                while (leftSlide.isBusy() || rightSlide.isBusy()) {
-                }
-
-                clawLeft.setPosition(0.7);
-                clawRight.setPosition(0.3);
-
-
-                rightRotate.setPower(0);
-                leftRotate.setPower(0);
-                leftSlide.setPower(0);
-                rightSlide.setPower(0);
-
-            }
 
             //make left bumper essentially just an everything reset, so it checks if the slide is out, and it returns it
 
@@ -296,40 +291,23 @@ public class IntoTheDeepCode extends LinearOpMode {
 
              */
 
-            //controls the opening and closing of the claws
-            if (gamepad2.x && !xPressed) {
-                clawOpen = !clawOpen;
-                xPressed = true;
-            } else if (!gamepad2.x) {
-                xPressed = false;
-            }
-            //if statement determining whether or not the claw is open
-            if (clawOpen) {
-                clawLeft.setPosition(0.7);
-                clawRight.setPosition(0.3);
-            } else {
-                clawLeft.setPosition(0.3);
-                clawRight.setPosition(0.7);
-            }
-
-            telemetry.addData("Claw", "X toggle");
-
+            //controls the opening and closing of the claw
             //controls the servos that rotate the claw
-            if (gamepad2.dpad_up) {
+            if (gamepad1.dpad_up) {
                 if (updown_wrist_position > 0) {
                     updown_wrist_position -= 0.001;
                 }
-            } else if (gamepad2.dpad_down) {
+            } else if (gamepad1.dpad_down) {
                 if (updown_wrist_position < 1) {
                     updown_wrist_position += 0.001;
                 }
             }
 
-            if (gamepad2.dpad_left) {
+            if (gamepad1.dpad_left) {
                 if (wrist_position > 0) {
                     wrist_position -= 0.001;
                 }
-            } else if (gamepad2.dpad_right) {
+            } else if (gamepad1.dpad_right) {
                 if (wrist_position < 1) {
                     wrist_position += 0.001;
                 }
