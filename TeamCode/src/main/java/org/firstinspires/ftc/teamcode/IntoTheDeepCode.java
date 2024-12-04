@@ -199,7 +199,7 @@ public class IntoTheDeepCode extends LinearOpMode {
 //
 //            }
 //
-//            if (gamepad1.b) {
+//            if (gamepad1.b) {  //to hang the robot at the end
 //                code
 //            }
 
