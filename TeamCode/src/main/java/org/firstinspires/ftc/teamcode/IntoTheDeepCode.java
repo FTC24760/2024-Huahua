@@ -72,7 +72,6 @@ public class IntoTheDeepCode extends LinearOpMode {
 
     private double updown_wrist_position = 0.5;
 
-//    private boolean presetActive = false;
 
     @Override
     public void runOpMode() {
@@ -110,7 +109,6 @@ public class IntoTheDeepCode extends LinearOpMode {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         boolean clawOpen = false;
         boolean xPressed = false;
@@ -118,12 +116,10 @@ public class IntoTheDeepCode extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            // Drive
-            float driveDampen = 0.7f;
 
-            driveY = gamepad1.left_stick_y * driveDampen;
-            driveX = -gamepad1.left_stick_x * driveDampen;
-            driveRX = -gamepad1.right_stick_x * driveDampen;
+            driveY = gamepad1.left_stick_y * 0.7f;
+            driveX = -gamepad1.left_stick_x * 0.7f;
+            driveRX = -gamepad1.right_stick_x * 0.7f;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
 
@@ -131,9 +127,6 @@ public class IntoTheDeepCode extends LinearOpMode {
             backLeft.setPower(((driveY - driveX) + driveRX) / driveDenominator);
             frontRight.setPower(((driveY - driveX) - driveRX) / driveDenominator);
             backRight.setPower(((driveY + driveX) - driveRX) / driveDenominator);
-
-            telemetry.addData("Drive Controls", "Left and Right Joysticks");
-
 
             // Slide
             if (gamepad1.a) { //gampepad1.a makes the slide go up to max position
@@ -143,7 +136,6 @@ public class IntoTheDeepCode extends LinearOpMode {
 
                 leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
 
                 leftSlide.setPower(-1);
                 rightSlide.setPower(-1);
@@ -162,8 +154,6 @@ public class IntoTheDeepCode extends LinearOpMode {
                 rightSlide.setPower(1);
 
             }
-
-
 
             telemetry.addData("Slide", "a/UP - b/DOWN");
 
@@ -186,26 +176,8 @@ public class IntoTheDeepCode extends LinearOpMode {
             telemetry.addData("Claw", "X toggle");
 
 
-
-
-            if (gamepad2.right_bumper) {
-                leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftRotate.setPower(-0.8);
-
-            } else if (gamepad2.left_bumper) {
-                leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftRotate.setPower(0.8);
-                telemetry.addData("LeftRotate Position", leftRotate.getCurrentPosition());
-
-            }
-            else {
-                leftRotate.setPower(0.0);
-            }
-
-
-
             if (gamepad1.right_bumper) { //slide will just be sent to the bottom
-//                presetActive = true;
+
                 int SLIDE_PICKUP_POSITION = -2275;
 
                 updown_wrist.setPosition(0.696);
@@ -216,19 +188,12 @@ public class IntoTheDeepCode extends LinearOpMode {
 
 
                 leftRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
-
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                leftRotate.setPower(-1);
-
-                while (leftRotate.isBusy()) {
-                }
+                leftRotate.setPower(1);
 
             }
 
-
             if (gamepad1.left_bumper) { //puts the robot in a neutral position
-//                presetActive = true;
 
                 if (Math.abs(leftSlide.getCurrentPosition()) > 0 || Math.abs(rightSlide.getCurrentPosition()) > 0){
                     leftSlide.setTargetPosition(0);
@@ -240,48 +205,38 @@ public class IntoTheDeepCode extends LinearOpMode {
                     leftSlide.setPower(1);
                     rightSlide.setPower(1);
 
-                    while (leftSlide.isBusy() || rightSlide.isBusy()) {
-
-                    }
-
                 }
 
                 leftRotate.setTargetPosition(0);
-
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                leftRotate.setPower(1);
-
-
+                if (leftRotate.getCurrentPosition() > 0) {
+                    leftRotate.setPower(1);
+                } else if (leftRotate.getCurrentPosition() < 0) {
+                    leftRotate.setPower(-1);
+                }
             }
 
             if (gamepad1.y) { //slide will be put in a position to grab a block from the pit
-//                presetActive = true;
 
                 int SLIDE_PICKUP_POSITION = -2280;
 
                 leftRotate.setTargetPosition(SLIDE_PICKUP_POSITION);
-                leftSlide.setTargetPosition(1000);
-                rightSlide.setTargetPosition(1000);
 
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
                 leftRotate.setPower(-1);
 
-
+                leftSlide.setTargetPosition(1000);
+                rightSlide.setTargetPosition(1000);
                 leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 leftSlide.setPower(-1);
                 rightSlide.setPower(-1);
-
-                while (leftSlide.isBusy() || leftSlide.isBusy()) {
-                }
 //
             }
 
             if (gamepad1.x) { //put slide into position to put something in the basket
-//                presetActive = true;
                 int SLIDE_BASKET_POSITION = 100;
 
                 updown_wrist.setPosition(0.0);
@@ -299,19 +254,12 @@ public class IntoTheDeepCode extends LinearOpMode {
 
                 leftRotate.setPower(-1);
 
-//                while (leftRotate.isBusy() || rightRotate.isBusy()) {
-//                }
-
-
                 leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 leftSlide.setPower(-1);
                 rightSlide.setPower(-1);
 
-//                while (leftSlide.isBusy() || leftSlide.isBusy()) {
-//                }
-//
 
 
             }
@@ -349,11 +297,6 @@ public class IntoTheDeepCode extends LinearOpMode {
             wrist.setPosition(wrist_position);
             updown_wrist.setPosition(updown_wrist_position);
 
-                // Reset presetActive once manual control resumes
-//            if (!gamepad1.x || !gamepad1.right_bumper || !gamepad1.y || !gamepad1.left_bumper) {
-//                presetActive = false;
-//            }
-
 
             telemetry.addData("Wrist Left Right Position", wrist.getPosition());
             telemetry.addData("Wrist Up Down Position", updown_wrist.getPosition());
@@ -375,6 +318,23 @@ public class IntoTheDeepCode extends LinearOpMode {
                 rightSlide.setPower(0.0);
             }
 
+            if (gamepad2.right_bumper) {
+                leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftRotate.setPower(-0.8);
+
+            } else if (gamepad2.left_bumper) {
+                leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftRotate.setPower(0.8);
+            } else {
+                if (leftRotate.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+                    leftRotate.setPower(0.0);
+                }
+            }
+
+            telemetry.addData("LeftRotate Position", leftRotate.getCurrentPosition());
+
+
+
 //            if (gamepad2.x) {
 //                while (distanceSensor1.getDistance(DistanceUnit.CM) > 50 && distanceSensor2.getDistance(DistanceUnit.CM)  > 50) {
 //                    frontRight.setPower(0.3);
@@ -392,7 +352,7 @@ public class IntoTheDeepCode extends LinearOpMode {
 //
 //                leftSlide.setTargetPosition(1500); //change
 //                rightSlide.setTargetPosition(1500); //change
-//                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);i
 //                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //                leftSlide.setPower(1);
 //                rightSlide.setPower(1);
@@ -404,4 +364,6 @@ public class IntoTheDeepCode extends LinearOpMode {
             telemetry.update();
         }
     }
+
 }
+
