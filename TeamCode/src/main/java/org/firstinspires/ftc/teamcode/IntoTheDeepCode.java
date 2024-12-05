@@ -268,7 +268,7 @@ public class IntoTheDeepCode extends LinearOpMode {
                 leftSlide.setPower(-1);
                 rightSlide.setPower(-1);
 
-//
+
             }
 
             if (gamepad1.x) { //put slide into position to put something in the basket
@@ -279,7 +279,6 @@ public class IntoTheDeepCode extends LinearOpMode {
 
                 wrist_position = 0.565;
                 updown_wrist_position = 0.0;
-
 
                 leftRotate.setTargetPosition(SLIDE_BASKET_POSITION);
                 leftSlide.setTargetPosition(SLIDE_MAX_POSITION);
@@ -294,10 +293,8 @@ public class IntoTheDeepCode extends LinearOpMode {
 
                 leftSlide.setPower(-1);
                 rightSlide.setPower(-1);
-
-
-
             }
+
             telemetry.addData("LeftRotate Position", leftRotate.getCurrentPosition());
 
 
@@ -329,14 +326,9 @@ public class IntoTheDeepCode extends LinearOpMode {
                 }
             }
 
-            wrist.setPosition(wrist_position);
-            updown_wrist.setPosition(updown_wrist_position);
-
-
             telemetry.addData("Wrist Left Right Position", wrist.getPosition());
             telemetry.addData("Wrist Up Down Position", updown_wrist.getPosition());
             telemetry.addData("Wrist Spin", "DPad Left/Right");
-
 
             if (gamepad2.left_trigger > 0.1) {
                 leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -367,33 +359,6 @@ public class IntoTheDeepCode extends LinearOpMode {
             }
 
             telemetry.addData("LeftRotate Position", leftRotate.getCurrentPosition());
-
-
-
-//            if (gamepad2.x) {
-//                while (distanceSensor1.getDistance(DistanceUnit.CM) > 50 && distanceSensor2.getDistance(DistanceUnit.CM)  > 50) {
-//                    frontRight.setPower(0.3);
-//                    frontLeft.setPower(0.3);
-//                    backRight.setPower(0.3);
-//                    backLeft.setPower(0.3);
-//                }
-//
-//                leftRotate.setTargetPosition(100); //change
-//                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                leftRotate.setPower(1);
-//
-//                while (leftRotate.isBusy()) {
-//                }
-//
-//                leftSlide.setTargetPosition(1500); //change
-//                rightSlide.setTargetPosition(1500); //change
-//                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);i
-//                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                leftSlide.setPower(1);
-//                rightSlide.setPower(1);
-//
-//            }
-
 
             // Add all telemetry
             telemetry.update();
