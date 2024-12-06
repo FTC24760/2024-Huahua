@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
-@TeleOp(name="2024 INTO THE DEEP")
-public class IntoTheDeepNewCode extends LinearOpMode {
+@TeleOp(name="BRYAN INTO THE DEEP CODE - NO WORKY")
+public class BryanIntoTheDeepNewCode extends LinearOpMode {
     // * DEFINE MOTORS AND SERVOS
     // Mecanum Drive
     private DcMotor frontRight;
