@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
-@TeleOp(name="BRYAN INTO THE DEEP CODE - NO WORKY")
+//@TeleOp(name="BRYAN INTO THE DEEP CODE - NO WORKY")
 public class BryanIntoTheDeepNewCode extends LinearOpMode {
     // * DEFINE MOTORS AND SERVOS
     // Mecanum Drive

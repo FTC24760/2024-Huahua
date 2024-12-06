@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 //TODO Map the distance sensor onto the control hub
 
-@Autonomous(name = "Distance Sensor Trials")
+//@Autonomous(name = "Distance Sensor Trials")
 public class distancesensor extends LinearOpMode {
     private DcMotor frontRight;
     private DcMotor frontLeft;
