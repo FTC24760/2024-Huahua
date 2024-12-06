@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
-@TeleOp(name="REWRITTEN 2024 INTO THE DEEP")
+@TeleOp(name="2024 INTO THE DEEP")
 public class IntoTheDeepNewCode extends LinearOpMode {
     // * DEFINE MOTORS AND SERVOS
     // Mecanum Drive
@@ -84,9 +84,9 @@ public class IntoTheDeepNewCode extends LinearOpMode {
 
         while (opModeIsActive()) {
             // DRIVING FUNCTIONS
-            driveY = gamepad1.left_stick_y * 0.5f;
-            driveX = -gamepad1.left_stick_x * 0.5f;
-            driveRX = -gamepad1.right_stick_x * 0.5f;
+            driveY = gamepad1.left_stick_y * 0.7f;
+            driveX = -gamepad1.left_stick_x * 0.7f;
+            driveRX = -gamepad1.right_stick_x * 0.7f;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
 
@@ -119,8 +119,6 @@ public class IntoTheDeepNewCode extends LinearOpMode {
                 rightSlide.setPower(1);
             }
 
-            telemetry.addData("Slide", "2A/UP - 2B/DOWN");
-
             // Claw
             if (gamepad2.x && !xPressed) {
                 clawOpen = !clawOpen;
@@ -137,8 +135,6 @@ public class IntoTheDeepNewCode extends LinearOpMode {
                 clawRight.setPosition(0.7);
             }
 
-            telemetry.addData("Claw", "2X toggle");
-
             // PRESET - Right bumper
             if (gamepad1.right_bumper) {
 
@@ -149,7 +145,7 @@ public class IntoTheDeepNewCode extends LinearOpMode {
                 updown_wrist_position = 0.576;
 
 
-                leftRotate.setTargetPosition(-2275);
+                leftRotate.setTargetPosition(-2300);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(1);
 
@@ -185,7 +181,7 @@ public class IntoTheDeepNewCode extends LinearOpMode {
                 updown_wrist_position = 0.116;
 
 
-                leftRotate.setTargetPosition(-2025);
+                leftRotate.setTargetPosition(-2100);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
@@ -224,23 +220,28 @@ public class IntoTheDeepNewCode extends LinearOpMode {
             // Rotate of the claw
             if (gamepad2.dpad_up) {
                 if (updown_wrist_position > 0) {
-                    updown_wrist_position -= 0.008;
+                    updown_wrist_position -= 0.006;
                 }
             } else if (gamepad2.dpad_down) {
                 if (updown_wrist_position < 1) {
-                    updown_wrist_position += 0.008;
+                    updown_wrist_position += 0.006;
                 }
             }
 
             if (gamepad2.dpad_left) {
                 if (wrist_position > 0) {
-                    wrist_position -= 0.005;
+                    wrist_position -= 0.006;
                 }
             } else if (gamepad2.dpad_right) {
                 if (wrist_position < 1) {
-                    wrist_position += 0.005;
+                    wrist_position += 0.006;
                 }
             }
+
+            wrist.setPosition(wrist_position);
+            updown_wrist.setPosition(updown_wrist_position);
+
+
 
 
             // Manual slide and rotation overrides
@@ -269,6 +270,12 @@ public class IntoTheDeepNewCode extends LinearOpMode {
             } else if (leftRotate.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
                 leftRotate.setPower(0.0);
             }
+
+            telemetry.addData("left rotate pos", leftRotate.getCurrentPosition());
+            telemetry.addData("slide pos", leftSlide.getCurrentPosition());
+            telemetry.addData("wrist pos: ", wrist.getPosition());
+            telemetry.addData("updown wrist pos ", updown_wrist.getPosition());
+
 
 
             telemetry.update();

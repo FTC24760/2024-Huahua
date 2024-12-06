@@ -38,7 +38,7 @@ Still available buttons (gamepad1):
 
 
 */
-@TeleOp(name = "2024 INTO THE DEEP CODE")
+@TeleOp
 public class IntoTheDeepCode extends LinearOpMode {
     // Mecanum Drive
     private DcMotor frontRight;
@@ -175,29 +175,29 @@ public class IntoTheDeepCode extends LinearOpMode {
 
             telemetry.addData("Claw", "X toggle");
 
-//            if (gamepad1.a) { //to put specimens onto the bar, if have time use and map distance sensors
-//                int SLIDE_SPECIMEN_HANG_POSITION = ;
-//                int SLIDE_EXTEND_SPECIMEN_HANG = ;
-//
-//                updown_wrist.setPosition(0.576);
-//                wrist.setPosition(0.59);
-//
-//                wrist_position = 0.59;
-//                updown_wrist_position = 0.576;
-//
-//                leftRotate.setTargetPosition(SLIDE_SPECIMEN_HANG_POSITION);
-//                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                leftRotate.setPower(-1);
-//
-//                leftSlide.setTargetPosition(SLIDE_EXTEND_SPECIMEN_HANG);
-//                rightSlide.setTargetPosition(SLIDE_EXTEND_SPECIMEN_HANG);
-//                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//                leftSlide.setPower(-1);
-//                rightSlide.setPower(-1);
-//
-//            }
+            if (gamepad1.a) { //to put specimens onto the bar, if have time use and map distance sensors
+                int SLIDE_SPECIMEN_HANG_POSITION = -800;
+                int SLIDE_EXTEND_SPECIMEN_HANG = 1000;
+
+                updown_wrist.setPosition(0.576);
+                wrist.setPosition(0.59);
+
+                wrist_position = 0.59;
+                updown_wrist_position = 0.576;
+
+                leftRotate.setTargetPosition(SLIDE_SPECIMEN_HANG_POSITION);
+                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftRotate.setPower(-1);
+
+                leftSlide.setTargetPosition(SLIDE_EXTEND_SPECIMEN_HANG);
+                rightSlide.setTargetPosition(SLIDE_EXTEND_SPECIMEN_HANG);
+                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftSlide.setPower(-1);
+                rightSlide.setPower(-1);
+
+            }
 //
 //            if (gamepad1.b) {  //to hang the robot at the end
 //                code
