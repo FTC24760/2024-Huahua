@@ -73,8 +73,8 @@ public class AutonomousCode extends LinearOpMode {
 
 
             // GO UP
-            leftSlide.setTargetPosition(2250);
-            rightSlide.setTargetPosition(2250);
+            leftSlide.setTargetPosition(2200);
+            rightSlide.setTargetPosition(2200);
 
             leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -84,7 +84,11 @@ public class AutonomousCode extends LinearOpMode {
             rightSlide.setPower(-1);
 
 
-            while (leftSlide.isBusy()) {}
+            while (leftSlide.isBusy()) {
+                telemetry.addData("pos", leftSlide.getCurrentPosition());
+                telemetry.update();
+            }
+
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.25);
             leftRotate.setTargetPosition(100);
@@ -119,7 +123,7 @@ public class AutonomousCode extends LinearOpMode {
             leftSlide.setPower(1);
             rightSlide.setPower(1);
 
-            while (leftSlide.isBusy()) {}
+            sleep(2500);
 
             drive.followTrajectorySequence(turnAroundAndPickUpOne);
 
