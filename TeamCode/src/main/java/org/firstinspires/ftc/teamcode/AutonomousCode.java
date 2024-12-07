@@ -60,14 +60,14 @@ public class AutonomousCode extends LinearOpMode {
 
         TrajectorySequence turnAroundAndPickUpOne = drive.trajectorySequenceBuilder(currentPose)
                 .forward(6)
-                .turn(Math.toRadians(65))
-                .forward(21)
+                .turn(Math.toRadians(60))
+                .forward(19)
                 .build();
 
         TrajectorySequence goBackToBasket = drive.trajectorySequenceBuilder(currentPose)
-                .back(24)
-                .turn(Math.toRadians(-65))
-                .back(9)
+                .back(20)
+                .turn(Math.toRadians(-60))
+                .back(7)
                 .build();
 
 
