@@ -268,7 +268,7 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 if (!isRotatedDown) {
                     leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    leftSlide.setPower(0.66);
+                    leftSlide.setPower(-0.66);
                     rightSlide.setPower(-0.66);
                 } else {
                     if (leftSlide.getCurrentPosition() < max_slide_when_rotated) {

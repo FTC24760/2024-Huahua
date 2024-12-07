@@ -53,20 +53,21 @@ public class AutonomousCode extends LinearOpMode {
         Pose2d currentPose = new Pose2d(0, 0, 0);
 
         TrajectorySequence goToBasket = drive.trajectorySequenceBuilder(currentPose)
-                .back(56)
-                .turn(Math.toRadians(55))
+                .strafeLeft(4)
+                .back(58)
+                .turn(Math.toRadians(65))
                 .build();
 
         TrajectorySequence turnAroundAndPickUpOne = drive.trajectorySequenceBuilder(currentPose)
-                .forward(5)
-                .turn(Math.toRadians(55))
-                .forward(19)
+                .forward(8)
+                .turn(Math.toRadians(75))
+                .forward(24)
                 .build();
 
         TrajectorySequence goBackToBasket = drive.trajectorySequenceBuilder(currentPose)
-                .back(19)
-                .turn(Math.toRadians(-55))
-                .back(8)
+                .back(24)
+                .turn(Math.toRadians(-65))
+                .back(9)
                 .build();
 
 
@@ -82,11 +83,11 @@ public class AutonomousCode extends LinearOpMode {
 
             // GO UP
 
-            /*leftRotate.setTargetPosition(200);
+            leftRotate.setTargetPosition(100);
 
             leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            leftRotate.setPower(-1);*/
+            leftRotate.setPower(-1);
 
 
             leftSlide.setTargetPosition(2200);
@@ -116,6 +117,12 @@ public class AutonomousCode extends LinearOpMode {
             clawRight.setPosition(0.7);
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.6);
+
+            leftRotate.setTargetPosition(0);
+
+            leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftRotate.setPower(1);
 
             sleep(500);
 
@@ -180,7 +187,7 @@ public class AutonomousCode extends LinearOpMode {
 
             // GO UP
 
-            leftRotate.setTargetPosition(200);
+            leftRotate.setTargetPosition(100);
 
             leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -214,6 +221,13 @@ public class AutonomousCode extends LinearOpMode {
             clawRight.setPosition(0.7);
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.6);
+
+            leftRotate.setTargetPosition(0);
+
+            leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftRotate.setPower(1);
+
 
             sleep(500);
 
