@@ -58,7 +58,15 @@ public class AutonomousCode extends LinearOpMode {
                 .build();
 
         TrajectorySequence turnAroundAndPickUpOne = drive.trajectorySequenceBuilder(currentPose)
-                .splineTo(new Vector2d(20, 44), Math.toRadians(90))
+                .forward(5)
+                .turn(Math.toRadians(55))
+                .forward(19)
+                .build();
+
+        TrajectorySequence goBackToBasket = drive.trajectorySequenceBuilder(currentPose)
+                .back(19)
+                .turn(Math.toRadians(-55))
+                .back(8)
                 .build();
 
 
@@ -71,8 +79,15 @@ public class AutonomousCode extends LinearOpMode {
             updown_wrist.setPosition(0.6);
             drive.followTrajectorySequence(goToBasket);
 
-
             // GO UP
+
+            leftRotate.setTargetPosition(200);
+
+            leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftRotate.setPower(-1);
+
+
             leftSlide.setTargetPosition(2200);
             rightSlide.setTargetPosition(2200);
 
@@ -85,17 +100,10 @@ public class AutonomousCode extends LinearOpMode {
 
 
             while (leftSlide.isBusy()) {
-                telemetry.addData("pos", leftSlide.getCurrentPosition());
-                telemetry.update();
             }
 
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.25);
-            leftRotate.setTargetPosition(100);
-
-            leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            leftRotate.setPower(-1);
             sleep(500);
 
             // OPEN CLAW1
@@ -123,10 +131,105 @@ public class AutonomousCode extends LinearOpMode {
             leftSlide.setPower(1);
             rightSlide.setPower(1);
 
-            sleep(2500);
+            sleep(1500);
+
+            // Turn around!!
+
 
             drive.followTrajectorySequence(turnAroundAndPickUpOne);
 
+            leftRotate.setTargetPosition(-2500);
+
+            leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftRotate.setPower(-1);
+
+            sleep(2000);
+
+            clawLeft.setPosition(0.7);
+            clawRight.setPosition(0.3);
+            sleep(250);
+            wrist.setPosition(0.565);
+            updown_wrist.setPosition(0.8);
+
+            sleep(500);
+            clawLeft.setPosition(0.3);
+            clawRight.setPosition(0.7);
+
+            sleep(500);
+
+            wrist.setPosition(0.565);
+            updown_wrist.setPosition(0.4);
+
+            sleep(500);
+
+            leftRotate.setTargetPosition(0);
+
+            leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftRotate.setPower(1);
+
+            sleep(2700);
+            wrist.setPosition(0.565);
+            updown_wrist.setPosition(0.6);
+
+            // go back
+
+            drive.followTrajectorySequence(goBackToBasket);
+
+            // GO UP
+
+            leftRotate.setTargetPosition(200);
+
+            leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftRotate.setPower(-1);
+
+
+            leftSlide.setTargetPosition(2200);
+            rightSlide.setTargetPosition(2200);
+
+            leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            leftSlide.setPower(-1);
+            rightSlide.setPower(-1);
+
+
+            while (leftSlide.isBusy()) {
+            }
+
+            wrist.setPosition(0.565);
+            updown_wrist.setPosition(0.25);
+            sleep(500);
+
+            // OPEN CLAW1
+            clawLeft.setPosition(0.7);
+            clawRight.setPosition(0.3);
+
+            sleep(500);
+            clawLeft.setPosition(0.3);
+            clawRight.setPosition(0.7);
+            wrist.setPosition(0.565);
+            updown_wrist.setPosition(0.6);
+
+            sleep(500);
+
+
+
+            // GO BACK
+            leftSlide.setTargetPosition(0);
+            rightSlide.setTargetPosition(0);
+
+            leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            leftSlide.setPower(1);
+            rightSlide.setPower(1);
+
+            sleep(1500);
         }
     }
 }
