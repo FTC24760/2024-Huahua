@@ -53,7 +53,7 @@ public class AutonomousCode extends LinearOpMode {
         Pose2d currentPose = new Pose2d(0, 0, 0);
 
         TrajectorySequence goToBasket = drive.trajectorySequenceBuilder(currentPose)
-                .back(60)
+                .back(56)
                 .turn(Math.toRadians(55))
                 .build();
 
@@ -73,6 +73,7 @@ public class AutonomousCode extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive() && !isStopRequested()) {
+
             clawLeft.setPosition(0.3);
             clawRight.setPosition(0.7);
             wrist.setPosition(0.565);
@@ -81,11 +82,11 @@ public class AutonomousCode extends LinearOpMode {
 
             // GO UP
 
-            leftRotate.setTargetPosition(200);
+            /*leftRotate.setTargetPosition(200);
 
             leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            leftRotate.setPower(-1);
+            leftRotate.setPower(-1);*/
 
 
             leftSlide.setTargetPosition(2200);
