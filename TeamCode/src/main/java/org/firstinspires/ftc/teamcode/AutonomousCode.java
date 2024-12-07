@@ -59,9 +59,9 @@ public class AutonomousCode extends LinearOpMode {
                 .build();
 
         TrajectorySequence turnAroundAndPickUpOne = drive.trajectorySequenceBuilder(currentPose)
-                .forward(8)
-                .turn(Math.toRadians(75))
-                .forward(24)
+                .forward(6)
+                .turn(Math.toRadians(65))
+                .forward(21)
                 .build();
 
         TrajectorySequence goBackToBasket = drive.trajectorySequenceBuilder(currentPose)
@@ -101,18 +101,17 @@ public class AutonomousCode extends LinearOpMode {
             rightSlide.setPower(-1);
 
 
-            while (leftSlide.isBusy()) {
-            }
+            sleep(1300);
 
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.25);
-            sleep(500);
+            sleep(300);
 
             // OPEN CLAW1
             clawLeft.setPosition(0.7);
             clawRight.setPosition(0.3);
 
-            sleep(500);
+            sleep(300);
             clawLeft.setPosition(0.3);
             clawRight.setPosition(0.7);
             wrist.setPosition(0.565);
@@ -124,7 +123,7 @@ public class AutonomousCode extends LinearOpMode {
 
             leftRotate.setPower(1);
 
-            sleep(500);
+            sleep(300);
 
 
 
@@ -139,7 +138,7 @@ public class AutonomousCode extends LinearOpMode {
             leftSlide.setPower(1);
             rightSlide.setPower(1);
 
-            sleep(1500);
+            sleep(1200);
 
             // Turn around!!
 
@@ -152,7 +151,7 @@ public class AutonomousCode extends LinearOpMode {
 
             leftRotate.setPower(-1);
 
-            sleep(2000);
+            sleep(1300);
 
             clawLeft.setPosition(0.7);
             clawRight.setPosition(0.3);
@@ -160,16 +159,16 @@ public class AutonomousCode extends LinearOpMode {
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.8);
 
-            sleep(500);
+            sleep(300);
             clawLeft.setPosition(0.3);
             clawRight.setPosition(0.7);
 
-            sleep(500);
+            sleep(250);
 
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.4);
 
-            sleep(500);
+            sleep(300);
 
             leftRotate.setTargetPosition(0);
 
@@ -177,7 +176,7 @@ public class AutonomousCode extends LinearOpMode {
 
             leftRotate.setPower(1);
 
-            sleep(2700);
+            sleep(2000);
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.6);
 
@@ -210,13 +209,13 @@ public class AutonomousCode extends LinearOpMode {
 
             wrist.setPosition(0.565);
             updown_wrist.setPosition(0.25);
-            sleep(500);
+            sleep(300);
 
             // OPEN CLAW1
             clawLeft.setPosition(0.7);
             clawRight.setPosition(0.3);
 
-            sleep(500);
+            sleep(300);
             clawLeft.setPosition(0.3);
             clawRight.setPosition(0.7);
             wrist.setPosition(0.565);
@@ -229,7 +228,7 @@ public class AutonomousCode extends LinearOpMode {
             leftRotate.setPower(1);
 
 
-            sleep(500);
+            sleep(300);
 
 
 
@@ -244,7 +243,7 @@ public class AutonomousCode extends LinearOpMode {
             leftSlide.setPower(1);
             rightSlide.setPower(1);
 
-            sleep(1500);
+            sleep(1200);
         }
     }
 }
