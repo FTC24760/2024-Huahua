@@ -32,5 +32,5 @@ dependencies {
 
     implementation 'org.ftclib.ftclib:core:2.0.1'
 
-
+    implementation files("lib/navx_ftc-release.aar")
 }
