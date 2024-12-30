@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -57,6 +58,8 @@ public class FinalIntoTheDeepFieldDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        navxDevice = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
+                AHRS.DeviceDataType.kProcessedData);
         // Drive
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
@@ -99,10 +102,17 @@ public class FinalIntoTheDeepFieldDrive extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            float gyroDegrees = navxDevice.getYaw();
+            double gyroRadians = Math.toRadians(gyroDegrees);
+
             // DRIVING FUNCTIONS
             driveY = gamepad1.left_stick_y * 0.5f;
             driveX = -gamepad1.left_stick_x * 0.5f;
             driveRX = -gamepad1.right_stick_x * 0.5f;
+
+            double temp = driveY * Math.cos(gyroRadians) + driveX * Math.sin(gyroRadians);
+            driveX = -driveY * Math.sin(gyroRadians) + driveX * Math.cos(gyroRadians);
+            driveY = (float) temp;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
 
