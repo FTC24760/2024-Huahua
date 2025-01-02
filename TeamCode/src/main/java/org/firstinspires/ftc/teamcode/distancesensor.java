@@ -28,8 +28,8 @@ public class distancesensor extends LinearOpMode {
 
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
