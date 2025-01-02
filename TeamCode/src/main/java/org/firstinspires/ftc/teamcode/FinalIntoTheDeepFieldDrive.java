@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
-@TeleOp(name="FINAL 2024 INTO THE DEEP")
+@TeleOp(name="FINAL 2024 INTO THE DEEP FIELD DRIVE")
 public class FinalIntoTheDeepFieldDrive extends LinearOpMode {
     // * DEFINE MOTORS AND SERVOS
     // Mecanum Drive
@@ -70,8 +70,8 @@ public class FinalIntoTheDeepFieldDrive extends LinearOpMode {
         float driveRX;
         double driveDenominator;
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Slide
         leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
@@ -108,7 +108,7 @@ public class FinalIntoTheDeepFieldDrive extends LinearOpMode {
             // DRIVING FUNCTIONS
             driveY = gamepad1.left_stick_y * 0.5f;
             driveX = -gamepad1.left_stick_x * 0.5f;
-            driveRX = -gamepad1.right_stick_x * 0.5f;
+            driveRX = gamepad1.right_stick_x * 0.5f;
 
             double temp = driveY * Math.cos(gyroRadians) + driveX * Math.sin(gyroRadians);
             driveX = -driveY * Math.sin(gyroRadians) + driveX * Math.cos(gyroRadians);
@@ -156,11 +156,11 @@ public class FinalIntoTheDeepFieldDrive extends LinearOpMode {
             }
 
             if (clawOpen) {
-                clawLeft.setPosition(0.7);
-                clawRight.setPosition(0.3);
-            } else {
                 clawLeft.setPosition(0.3);
                 clawRight.setPosition(0.7);
+            } else {
+                clawLeft.setPosition(0.7);
+                clawRight.setPosition(0.3);
             }
 
             telemetry.addData("Claw", "2X toggle");

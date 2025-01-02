@@ -52,8 +52,8 @@ public class BryanIntoTheDeepNewCode extends LinearOpMode {
         float driveRX;
         double driveDenominator;
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Slide
         leftSlide = hardwareMap.get(DcMotor.class, "leftSlide");
