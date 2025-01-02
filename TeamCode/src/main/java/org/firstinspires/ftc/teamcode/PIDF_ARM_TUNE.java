@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Config
 @TeleOp
-public class PIDF_ARM extends OpMode {
+public class PIDF_ARM_TUNE extends OpMode {
     private PIDController controller;
     public static double p = 0, i = 0, d= 0;
     public static double f=0;
@@ -25,7 +25,7 @@ public class PIDF_ARM extends OpMode {
         controller = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        leftRotate = hardwareMap.get(DcMotor.class, "left Rotate");
+        leftRotate = hardwareMap.get(DcMotor.class, "leftRotate");
     }
 
     @Override
@@ -44,10 +44,5 @@ public class PIDF_ARM extends OpMode {
         telemetry.update();
     }
 }
-
-//start f at 0.05, and keep on going up until the arm can resist gravity
-//change p to get pos as close to target as possible
-//configure d
-//go to 192.168.43.1:8080/dash
 
 
