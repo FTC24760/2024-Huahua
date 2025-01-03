@@ -25,7 +25,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
     private DcMotor rightSlide;
 
     private DcMotor leftRotate;
-    private D
 
 
     // Wrist Spin
