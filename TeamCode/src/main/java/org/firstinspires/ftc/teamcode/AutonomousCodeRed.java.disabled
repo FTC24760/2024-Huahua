@@ -86,7 +86,7 @@ public class AutonomousCodeRed extends OpMode {
 
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
         scorePreload = new Path(new BezierLine(new Point(startPose), new Point(scorePose)));
-        scorePreload.setConstantHeadingInterpolation(startPose.getHeading());
+        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
 
 
         /* Here is an example for Constant Interpolation
