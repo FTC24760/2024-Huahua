@@ -1,13 +1,45 @@
+/*
+
+COLOUR CODING LEGEND
+
+====================
+
+ Preset Movements (gamepad1)
+ -> Scoring Processes - Red
+ -> Neutral - Orange
+ -> Intake Processes - Yellow
+ -> Hanging & End Game - Hot Pink
+
+ Auxiliary Movements (gamepad2)
+ -> Claw - AQUA
+ -> ARM - VIOLET
+
+
+====================
+
+ */
+
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+//MOTORS & SERVOS
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
+//REV LED
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+
+//DISTANCE SENSOR
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import com.qualcomm.robotcore.hardware.Servo;
+//FIELD DRIVE GYROSCOPE
+import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.kauailabs.navx.ftc.AHRS;
 
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
@@ -25,17 +57,17 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
     private DcMotor rightSlide;
 
     private DcMotor leftRotate;
+    RevBlinkinLedDriver blinkinLedDriver;
+    RevBlinkinLedDriver.BlinkinPattern pattern;
 
+    private AHRS navxDevice;
 
-    // Wrist Spin
     private Servo wrist;
     private Servo updown_wrist;
 
     // Claw
     private Servo clawLeft;
     private Servo clawRight;
-//    private DistanceSensor distancesensor1;
-
 
     static final int SLIDE_MAX_POSITION = -2150;
 
@@ -43,7 +75,8 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
     private double updown_wrist_position = 0.915;
 
-    private double max_slide_when_rotated = 1000;
+    private boolean isBPressed = false;
+    private boolean toggleSpecimen = false;
 
 
     private enum RobotState {
@@ -51,15 +84,12 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
         ROTATING,
         WAITING,
         SLIDING,
-        TRANSITION,
-        MAX,
-        NEUTRAL_TRANSITION,
-        NEUTRAL,
-        NEUTRAL_ROTATE
+        MAX_SLIDE,
+        SPECIMEN,
+        SUBMERSIBLE,
     }
 
     private RobotState currentState = RobotState.IDLE;
-
 
     @Override
     public void runOpMode() {
@@ -90,29 +120,40 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
-//        distancesensor1 = hardwareMap.get(DistanceSensor.class, "distancesensor1");
-
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Define claw variables
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+
+        navxDevice = AHRS.getInstance(hardwareMap.get(NavxMicroNavigationSensor.class, "navx"),
+                AHRS.DeviceDataType.kProcessedData);
+
         boolean clawOpen = false;
         boolean xPressed = false;
 
-        // Define slide variable
         boolean slideDown = true;
 
-        boolean isRotatedDown = false;
+//        boolean isRotatedDown = false;
+
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            // DRIVING FUNCTIONS
+            pattern = RevBlinkinLedDriver.BlinkinPattern.TWINKLES_FOREST_PALETTE;
+
+            // DRIVING FUNCTIONS FOR FIELD DRIVE
             driveY = -gamepad1.left_stick_y * 0.5f;
             driveX = -gamepad1.left_stick_x * 0.5f;
             driveRX = -gamepad1.right_stick_x * 0.5f;
+
+            float gyroDegrees = navxDevice.getYaw();
+            double gyroRadians = Math.toRadians(gyroDegrees);
+
+            double temp = driveY * Math.cos(gyroRadians) + driveX * Math.sin(gyroRadians);
+            driveX = -driveY * Math.sin(gyroRadians) + driveX * Math.cos(gyroRadians);
+            driveY = (float) temp;
 
             driveDenominator = JavaUtil.maxOfList(JavaUtil.createListWith(JavaUtil.sumOfList(JavaUtil.createListWith(Math.abs(driveY), Math.abs(driveX), Math.abs(driveRX))), 1));
 
@@ -121,25 +162,103 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
             frontRight.setPower(((driveY - driveX) - driveRX) / driveDenominator);
             backRight.setPower(((driveY + driveX) - driveRX) / driveDenominator);
 
-            // Opens and closes the claw
-            if (gamepad2.y && !xPressed) {
-                clawOpen = !clawOpen;
-                xPressed = true;
-            } else if (!gamepad2.y) {
-                xPressed = false;
+            /*
+            -----------------
+            SCORING PROCESSES
+            -----------------
+             */
+
+            if (gamepad1.x) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+
+                slideDown = false;
+//                isRotatedDown = false;
+
+                wrist_position = 0.64;
+
+                leftRotate.setTargetPosition(-2250);
+                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftRotate.setPower(-1);
+
+                currentState = RobotState.MAX_SLIDE;
             }
 
-            if (clawOpen) {
-                clawLeft.setPosition(0.7);
-                clawRight.setPosition(0.2);
-            } else {
-                clawLeft.setPosition(0.4);
-                clawRight.setPosition(0.5);
+            if (gamepad1.b && !isBPressed) {
+                toggleSpecimen = !toggleSpecimen;
+                isBPressed = true;
+
+                if (toggleSpecimen) {
+                    pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+
+                    wrist_position = 0.05;
+                    updown_wrist_position = 0.615;
+
+                    leftRotate.setTargetPosition(-1707);
+                    leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    leftRotate.setPower(-1);
+
+                    currentState = RobotState.SPECIMEN;
+
+                } else {
+                    pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+
+                    updown_wrist_position = 0.200;
+
+                    leftRotate.setTargetPosition(-1200);
+                    leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    leftRotate.setPower(-1);
+
+                    currentState = RobotState.IDLE;
+                }
+            } else if (!gamepad1.b){
+                isBPressed = false;
             }
 
-            // PRESET - picks up sample that is right in front of the robot
+            /*
+            -----------
+            NEUTRAL POS.
+            -----------
+             */
+
+            if (gamepad1.left_trigger > 0.5) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
+
+                updown_wrist_position = 0.69;
+                wrist_position = 0.05;
+
+                slideDown = true;
+                leftSlide.setTargetPosition(0);
+                rightSlide.setTargetPosition(0);
+
+                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftSlide.setPower(1);
+                rightSlide.setPower(1);
+
+            } else if (gamepad1.right_trigger > 0.5) {
+//                isRotatedDown = false;
+                pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
+
+                updown_wrist_position = 0.69;
+                wrist_position = 0.05;
+
+                leftRotate.setTargetPosition(0);
+                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftRotate.setPower(1);
+            }
+
+            /*
+            ----------------
+            INTAKE PROCESSES
+            ----------------
+             */
+
+
             if (gamepad1.right_bumper) {
-                isRotatedDown = true;
+                pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+//                isRotatedDown = true;
 
                 wrist_position = 0.07;
                 updown_wrist_position = 0.465;
@@ -149,33 +268,16 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(1);
 
-            // PRESET - returns the robot to neutral position, including slides and rotate pos
-            } else if (gamepad1.left_bumper) {
-                isRotatedDown = false;
-                if (Math.abs(leftSlide.getCurrentPosition()) > 0 || Math.abs(rightSlide.getCurrentPosition()) > 0){
-                    slideDown = true;
-                    leftSlide.setTargetPosition(0);
-                    rightSlide.setTargetPosition(0);
-
-                    leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                    leftSlide.setPower(1);
-                    rightSlide.setPower(1);
-
-                }
-
-                currentState = RobotState.NEUTRAL_TRANSITION;
-
-                //PRESET - grabs a specimen from the inside thingymabob
             } else if (gamepad1.y && currentState == RobotState.IDLE) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+
                 slideDown = false;
-                isRotatedDown = true;
+//                isRotatedDown = true;
 
-                wrist_position = 0.07;
-                updown_wrist_position = 0.465;
+                updown_wrist_position = 0.69;
+                wrist_position = 0.05;
 
-                clawOpen = false;
+                clawOpen = true;
 
                 leftRotate.setTargetPosition(0);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -183,83 +285,107 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                 currentState = RobotState.ROTATING;
 
-            // PRESET - scores sample into high basket
-            } else if (gamepad1.x) {
-                slideDown = false;
-                isRotatedDown = false;
-
-//                wrist_position = 0.445;
-//                updown_wrist_position = 0.246;
-
-                leftRotate.setTargetPosition(-2980);
-
-                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                leftRotate.setPower(-1);
-
-                currentState = RobotState.TRANSITION;
-
-            //PRESET - lines up the robot with the submersible to be ready to hang using distance sensors, and then uses cases to line up and extend the slides to be hung
             }
 
-//            else if (gamepad1.a) {
-//                int thresholdDistance = 50;
-//
-//                if (distancesensor1.getDistance(DistanceUnit.CM) > thresholdDistance) {
-//                    frontRight.setPower(0.4);
-//                    frontLeft.setPower(0.4);
-//                    backRight.setPower(0.4);
-//                    backLeft.setPower(0.4);
-//                } else {
-//                    frontRight.setPower(0);
-//                    frontLeft.setPower(0);
-//                    backRight.setPower(0);
-//                    backLeft.setPower(0);
-//                }
-//            }
+            if (gamepad1.left_bumper) {
+                updown_wrist_position = 0.37;
+                wrist_position = 0.452;
+            }
 
-            // Rotate of the claw
+
+            /*
+            ------------------
+            HANGING IN END GAME
+            ------------------
+             */
+
+            if (gamepad1.a) {
+                slideDown = false;
+//                isRotatedDown = false;
+
+                leftRotate.setTargetPosition(-3140);
+                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftRotate.setPower(-1);
+
+                currentState = RobotState.ROTATING;
+
+            }
+
+            /*
+            --------------
+            CLAW MOVEMENTS
+            --------------
+             */
+
+            if (gamepad2.y && !xPressed) {
+                clawOpen = !clawOpen;
+                xPressed = true;
+            } else if (!gamepad2.y) {
+                xPressed = false;
+            }
+
+            if (clawOpen) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
+
+                clawLeft.setPosition(0.4);
+                clawRight.setPosition(0.5);
+            } else {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
+
+                clawLeft.setPosition(0.7);
+                clawRight.setPosition(0.2);
+
+            }
+
             if (gamepad2.left_stick_y < -0.1) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
+
                 if (updown_wrist_position > 0) {
                     updown_wrist_position -= 0.01;
                 }
             } else if (gamepad2.left_stick_y > 0.1) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
+
                 if (updown_wrist_position < 1) {
                     updown_wrist_position += 0.01;
                 }
             }
 
             if (gamepad2.right_stick_x < -0.1) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
+
                 if (wrist_position > 0) {
                     wrist_position -= 0.01;
                 }
             } else if (gamepad2.right_stick_x > 0.1) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
+
                 if (wrist_position < 1) {
                     wrist_position += 0.01;
                 }
             }
 
+            /*
+            -------------
+            ARM MOVEMENTS
+            -------------
+             */
 
-            // Manual slide and rotation overrides, lt brings the slide up; rt brings the slide down
             if (gamepad2.left_trigger > 0.1) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+
                 leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftSlide.setPower(-0.75);
                 rightSlide.setPower(-0.75);
             } else if (gamepad2.right_trigger > 0.1) {
-//                if (!isRotatedDown) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+
                 leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftSlide.setPower(0.75);
                 rightSlide.setPower(0.75);
-//                } else {
-//                    if (leftSlide.getCurrentPosition() < max_slide_when_rotated) {
-//                        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                        leftSlide.setPower(0.66);
-//                        righ  tSlide.setPower(0.66);
-//                    }
-//                }
+
             } else if ((leftSlide.getMode() == DcMotor.RunMode.RUN_USING_ENCODER && rightSlide.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) || (!leftSlide.isBusy() && !rightSlide.isBusy() && slideDown)) {
                 leftSlide.setPower(0.0);
                 rightSlide.setPower(0.0);
@@ -267,26 +393,33 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
             //rb brings the slide backward; lb brings the slide backward
             if (gamepad2.right_bumper) {
-                leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                leftRotate.setPower(-0.95);
-            } else if (gamepad2.left_bumper) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+
                 leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftRotate.setPower(0.95);
+            } else if (gamepad2.left_bumper) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+
+                leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftRotate.setPower(-0.95);
             } else if (leftRotate.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
                 leftRotate.setPower(0.0);
             }
 
-
-            //PRESET - SPECIMEN
-
-            //grabs the specimen straight from the wall at a short distance
-            if (gamepad2.a) {
-                updown_wrist_position = 0.37;
-                wrist_position = 0.452;
-            }
+            /*
+            --------------------
+            SEMI-NEUTRAL POSITION
+            --------------------
+             */
 
             if (gamepad2.x) {
-                clawOpen = true;
+                pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
+
+                clawOpen = false;
+
+                wrist_position = 0.07;
+                updown_wrist_position = 0.685;
+
 
                 if (Math.abs(leftSlide.getCurrentPosition()) > 0 || Math.abs(rightSlide.getCurrentPosition()) > 0){
                     slideDown = true;
@@ -301,16 +434,8 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                 }
 
-                currentState = RobotState.NEUTRAL_TRANSITION;
 
             }
-
-            //puts the slide at the correct position to place a specimen onto the bar
-//            else if (gamepad2.b) {
-//
-//
-//
-//            }
 
 
             wrist.setPosition(wrist_position);
@@ -319,46 +444,29 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
             switch (currentState) {
                 case ROTATING:
-                    // Check if the rotation is complete
                     if (!leftRotate.isBusy()) {
-                        // Wait for a brief period before starting the slide
                         currentState = RobotState.WAITING;
                     }
                     break;
-                case NEUTRAL_TRANSITION:
-                    if (!leftSlide.isBusy() && !rightSlide.isBusy()) {
-                        currentState = RobotState.NEUTRAL;
-                    }
-                case NEUTRAL:
-                        wrist_position = 0.07;
-                        updown_wrist_position = 0.685;
 
-                        leftRotate.setTargetPosition(0);
-                        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                        if (leftRotate.getCurrentPosition() > 0) {
-                            leftRotate.setPower(1);
-                        } else if (leftRotate.getCurrentPosition() < 0) {
-                            leftRotate.setPower(-1);
-                        }
-
-                        currentState = RobotState.NEUTRAL_ROTATE;
-
-                    break;
-
-                case NEUTRAL_ROTATE:
+                case SPECIMEN:
                     if (!leftRotate.isBusy()) {
-                        currentState = RobotState.IDLE;
+                        leftSlide.setTargetPosition(-750);
+                        rightSlide.setTargetPosition(-750);
+
+                        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                        leftSlide.setPower(-1);
+                        rightSlide.setPower(-1);
                     }
                     break;
 
-                case TRANSITION:
+
+                case MAX_SLIDE:
                     if (!leftRotate.isBusy()) {
-                        currentState = RobotState.MAX;
-                    }
-                    break;
+                        updown_wrist_position = 0.855;
 
-                case MAX:
                         leftSlide.setTargetPosition(SLIDE_MAX_POSITION);
                         rightSlide.setTargetPosition(SLIDE_MAX_POSITION);
 
@@ -370,9 +478,10 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                         currentState = RobotState.SLIDING;
 
+                    }
                     break;
+
                 case WAITING:
-                        // Start the slide movement
                         leftSlide.setTargetPosition(-1000);
                         rightSlide.setTargetPosition(-1000);
 
@@ -382,23 +491,33 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                         leftSlide.setPower(-1);
                         rightSlide.setPower(-1);
 
-                        // Transition to SLIDING state
-                        currentState = RobotState.SLIDING;
+                        currentState = RobotState.SUBMERSIBLE;
 
                     break;
 
                 case SLIDING:
-                    // Check if the slide is complete
                     if (!leftSlide.isBusy() && !rightSlide.isBusy()) {
-                        // Return to IDLE state
                         currentState = RobotState.IDLE;
                     }
                     break;
 
+                case SUBMERSIBLE:
+                    if (!leftSlide.isBusy() && !rightSlide.isBusy()) {
+                        wrist_position = 0.07;
+                        updown_wrist_position = 0.465;
+
+                        currentState = RobotState.IDLE;
+                    }
+                    break;
+
+
+
                 case IDLE:
-                    // Nothing to do, waiting for input
+                    //do nothing and wait for input
                     break;
             }
+
+            blinkinLedDriver.setPattern(pattern);
 
             telemetry.addData("State", currentState);
             telemetry.addData("Left Rotate pos", leftRotate.getCurrentPosition());
@@ -411,7 +530,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
             telemetry.addData("left slide pos: ", leftSlide.getCurrentPosition());
             telemetry.addData("right slide pos: ", rightSlide.getCurrentPosition());
 
-//            telemetry.addData("distance sensor in cm: ", distancesensor1.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
     }
