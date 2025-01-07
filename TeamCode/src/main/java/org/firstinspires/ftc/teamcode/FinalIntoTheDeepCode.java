@@ -176,7 +176,7 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                 wrist_position = 0.64;
 
-                leftRotate.setTargetPosition(-2250);
+                leftRotate.setTargetPosition(-2350);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
