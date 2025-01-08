@@ -6,6 +6,12 @@
 
 buildscript {
     repositories {
+
+        //CHANGE IF ROBOT STOPPED WORKING
+        flatDir {
+            dirs 'libs','/Users/Robot/navx-micro/android/libs'
+        }
+
         mavenCentral()
         google()
     }
