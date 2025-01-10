@@ -35,6 +35,8 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 //DISTANCE SENSOR
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.robot.Robot;
+
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 //FIELD DRIVE GYROSCOPE
@@ -235,6 +237,10 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 leftSlide.setPower(1);
                 rightSlide.setPower(1);
 
+                if (!leftSlide.isBusy() && !rightSlide.isBusy()) {
+                    currentState = RobotState.IDLE;
+                }
+
             } else if (gamepad1.right_trigger > 0.5) {
 //                isRotatedDown = false;
                 pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
@@ -376,29 +382,30 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
             if (gamepad2.left_trigger > 0.1) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
 
+                //limitation so slide is unable to extend further than 42"
                 if (leftSlide.getCurrentPosition() < -1250 && slideDown && leftRotate.getCurrentPosition() < 800) {
                     leftSlide.setPower(0);
                     rightSlide.setPower(0);
                 } else {
-
                     leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     leftSlide.setPower(-0.75);
                     rightSlide.setPower(-0.75);
                 }
+
             } else if (gamepad2.right_trigger > 0.1) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
 
-                    leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    leftSlide.setPower(0.75);
-                    rightSlide.setPower(0.75);
-
-
+                leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftSlide.setPower(0.75);
+                rightSlide.setPower(0.75);
 
             } else if ((leftSlide.getMode() == DcMotor.RunMode.RUN_USING_ENCODER && rightSlide.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) || (!leftSlide.isBusy() && !rightSlide.isBusy() && slideDown)) {
                 leftSlide.setPower(0.0);
                 rightSlide.setPower(0.0);
+
+                currentState = RobotState.IDLE;
             }
 
             //rb brings the slide backward; lb brings the slide backward
