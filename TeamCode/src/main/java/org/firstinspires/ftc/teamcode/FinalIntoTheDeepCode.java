@@ -147,7 +147,7 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
             // DRIVING FUNCTIONS FOR FIELD DRIVE
             driveY = -gamepad1.left_stick_y * 0.5f;
-            driveX = -gamepad1.left_stick_x * 0.5f;
+            driveX = gamepad1.left_stick_x * 0.5f;
             driveRX = -gamepad1.right_stick_x * 0.5f;
 
 //            float gyroDegrees = navxDevice.getYaw();
@@ -178,7 +178,7 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                 wrist_position = 0.64;
 
-                leftRotate.setTargetPosition(-2500);
+                leftRotate.setTargetPosition(-2265);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
@@ -267,15 +267,10 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
 //                isRotatedDown = true;
 
-                wrist_position = 0.07;
-                updown_wrist_position = 0.465;
+                wrist_position = 0.04;
+                updown_wrist_position = 0.495;
 
                 slideDown = true;
-
-
-                leftRotate.setTargetPosition(0);
-                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                leftRotate.setPower(1);
 
             } else if (gamepad1.y && currentState == RobotState.IDLE) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
@@ -286,11 +281,16 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 updown_wrist_position = 0.69;
                 wrist_position = 0.05;
 
-                leftRotate.setTargetPosition(0);
-                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                leftRotate.setPower(-1);
+                leftSlide.setTargetPosition(-1000);
+                rightSlide.setTargetPosition(-1000);
 
-                currentState = RobotState.ROTATING;
+                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftSlide.setPower(-1);
+                rightSlide.setPower(-1);
+
+                currentState = RobotState.SUBMERSIBLE;
 
             }
 
@@ -430,30 +430,27 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
             --------------------
              */
 
-            if (gamepad2.x) {
-                pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
-
-                clawOpen = false;
-
-                updown_wrist_position = 0.69;
-                wrist_position = 0.05;
-
-
-                if (Math.abs(leftSlide.getCurrentPosition()) > 0 || Math.abs(rightSlide.getCurrentPosition()) > 0){
-                    slideDown = true;
-                    leftSlide.setTargetPosition(0);
-                    rightSlide.setTargetPosition(0);
-
-                    leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                    leftSlide.setPower(1);
-                    rightSlide.setPower(1);
-
-                }
-
-
-            }
+//            if (gamepad2.x) {
+//                pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
+//
+//                clawOpen = false;
+//
+//                updown_wrist_position = 0.69;
+//                wrist_position = 0.05;
+//
+//
+//                if (Math.abs(leftSlide.getCurrentPosition()) > 0 || Math.abs(rightSlide.getCurrentPosition()) > 0){
+//                    slideDown = true;
+//                    leftSlide.setTargetPosition(0);
+//                    rightSlide.setTargetPosition(0);
+//
+//                    leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                    rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//                    leftSlide.setPower(1);
+//                    rightSlide.setPower(1);
+//                }
+//            }
 
             if (gamepad2.dpad_up) {
                 leftRotate.setTargetPosition(1650);
@@ -509,35 +506,12 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                     }
                     break;
 
-                case WAITING:
-                        leftSlide.setTargetPosition(-1000);
-                        rightSlide.setTargetPosition(-1000);
-
-                        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                        leftSlide.setPower(-1);
-                        rightSlide.setPower(-1);
-
-                        currentState = RobotState.SUBMERSIBLE;
-
-
-                    break;
-
                 case SLIDING:
                     if (!leftSlide.isBusy() && !rightSlide.isBusy()) {
                         currentState = RobotState.IDLE;
                     }
                     break;
 
-                case SUBMERSIBLE:
-                    if (!leftSlide.isBusy() && !rightSlide.isBusy()) {
-                        wrist_position = 0.07;
-                        updown_wrist_position = 0.465;
-
-                        currentState = RobotState.IDLE;
-                    }
-                    break;
 
                 case STARTING:
                     if (!leftRotate.isBusy()) {
