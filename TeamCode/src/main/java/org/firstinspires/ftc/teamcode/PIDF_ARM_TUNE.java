@@ -19,6 +19,7 @@ public class PIDF_ARM_TUNE extends OpMode {
     private final double ticks_in_degrees = 700 / 180.0;
 
     private DcMotor leftRotate;
+    private DcMotor rightRotate;
 
     @Override
     public void init() {
@@ -26,6 +27,7 @@ public class PIDF_ARM_TUNE extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         leftRotate = hardwareMap.get(DcMotor.class, "leftRotate");
+        rightRotate = hardwareMap.get(DcMotor.class, "rightRotate");
     }
 
     @Override
@@ -38,6 +40,7 @@ public class PIDF_ARM_TUNE extends OpMode {
         double power = pid + ff;
 
         leftRotate.setPower(power);
+        rightRotate.setPower(power);
 
         telemetry.addData("pos: ", armPos);
         telemetry.addData("target: ", target);

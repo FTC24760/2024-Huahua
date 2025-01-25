@@ -14,7 +14,6 @@ public class PIDFController {
         this.kF = kF;
     }
 
-    // Method to calculate the output of the PIDF controller
     public double calculate(double currentPosition, double targetPosition) {
         // Calculate error
         double error = targetPosition - currentPosition;
@@ -56,18 +55,6 @@ public class PIDFController {
         lastTimestamp = 0;
     }
 
-    // Methods to update the PIDF coefficients dynamically
-    public void setPIDF(double kP, double kI, double kD, double kF) {
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
-        this.kF = kF;
-    }
 
-    public void setPID(double kP, double kI, double kD) {
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
-        this.kF = 0;
-    }
+
 }
