@@ -25,8 +25,9 @@ public class AutonomousCode extends LinearOpMode {
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
 
-        TrajectoryActionBuilder goToBasket = drive.actionBuilder(initialPose)
-                .lineToX(50);
+        Action goToBasket = drive.actionBuilder(initialPose)
+                .splineTo(new Vector2d(50, 0), Math.toRadians(50))
+                .build();
 
 
         waitForStart();
@@ -36,7 +37,7 @@ public class AutonomousCode extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        goToBasket.build()
+                        goToBasket
                 )
         );
 
