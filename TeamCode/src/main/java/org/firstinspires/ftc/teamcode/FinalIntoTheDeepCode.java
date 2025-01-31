@@ -54,7 +54,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
     private DcMotor rightSlide;
 
     private DcMotor leftRotate;
-    private DcMotor rightRotate;
     RevBlinkinLedDriver blinkinLedDriver;
     RevBlinkinLedDriver.BlinkinPattern pattern;
 
@@ -111,7 +110,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
         leftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftRotate = hardwareMap.get(DcMotor.class, "leftRotate");
-        rightRotate = hardwareMap.get(DcMotor.class, "rightRotate");
 
         // Wrist and Claw
         wrist = hardwareMap.get(Servo.class, "wrist");
@@ -123,7 +121,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
 
@@ -134,7 +131,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
         boolean xPressed = false;
 
         boolean slideDown = true;
-
         boolean touchSensorEnabled = true;
 
 
@@ -149,7 +145,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                     rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
                     leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    rightRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
                 } else {
                     telemetry.addData("touch sensor", "is not pressed");
@@ -184,17 +179,11 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                 slideDown = false;
 
-                wrist_position = 0.64;
+                updown_wrist_position = 0.500;
 
-                leftRotate.setTargetPosition(2400);
-                rightRotate.setTargetPosition(-2400);
-
+                leftRotate.setTargetPosition(-2500);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                rightRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                rightRotate.setPower(-1);
-                leftRotate.setPower(1);
-
+                leftRotate.setPower(-1);
 
                 currentState = RobotState.MAX_SLIDE;
             }
@@ -237,6 +226,7 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
              */
 
             if (gamepad1.left_trigger > 0.5) {
+
                 pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
 
                 updown_wrist_position = 0.69;
@@ -257,6 +247,7 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
             } else if (gamepad1.right_trigger > 0.5) {
                 touchSensorEnabled = true;
+
 //                isRotatedDown = false;
                 pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
 
@@ -266,12 +257,9 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 slideDown = true;
 
                 leftRotate.setTargetPosition(0);
-                rightRotate.setTargetPosition(0);
 
-                rightRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                rightRotate.setPower(1);
                 leftRotate.setPower(-1);
             }
 
@@ -286,7 +274,7 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
 
                 wrist_position = 0.04;
-                updown_wrist_position = 0.435;
+                updown_wrist_position = 0.415;
 
                 slideDown = true;
 
@@ -296,8 +284,8 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                 slideDown = true;
 
-                updown_wrist_position = 0.69;
-                wrist_position = 0.05;
+                wrist_position = 0.04;
+                updown_wrist_position = 0.415;
 
                 leftSlide.setTargetPosition(1000);
                 rightSlide.setTargetPosition(1000);
@@ -307,8 +295,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
                 leftSlide.setPower(1);
                 rightSlide.setPower(1);
-
-
             }
 
 //            if (gamepad1.left_bumper) {
@@ -429,21 +415,16 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
 
                 leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                rightRotate.setPower(-0.95);
                 leftRotate.setPower(0.95);
             } else if (gamepad2.left_bumper) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
 
                 leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rightRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                rightRotate.setPower(0.95);
                 leftRotate.setPower(-0.95);
             } else if (leftRotate.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
                 leftRotate.setPower(0.0);
-                rightRotate.setPower(0.0);
 
                 currentState = RobotState.IDLE;
             }
@@ -481,8 +462,9 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
 
 
                 case MAX_SLIDE:
-                    if (!leftRotate.isBusy() && !rightRotate.isBusy()) {
+                    if (!leftRotate.isBusy()) {
                         updown_wrist_position = 1;
+                        wrist_position = 0.64;
 
                         leftSlide.setTargetPosition(4150);
                         rightSlide.setTargetPosition(4150);
@@ -522,7 +504,6 @@ public class FinalIntoTheDeepCode extends LinearOpMode {
             telemetry.addData("State", currentState);
 
             telemetry.addData("Left Rotate pos", leftRotate.getCurrentPosition());
-            telemetry.addData("Right Rotate pos, ", rightRotate.getCurrentPosition());
 
             telemetry.addData("Updown wrist pos", updown_wrist.getPosition());
             telemetry.addData("Side to side wrist pos", wrist.getPosition());
