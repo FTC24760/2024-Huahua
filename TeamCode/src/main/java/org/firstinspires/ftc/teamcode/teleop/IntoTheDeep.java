@@ -201,6 +201,21 @@ public class IntoTheDeep extends LinearOpMode {
                 currentState = RobotState.MAX_SLIDE;
             }
 
+            // ONLY bring rotation up
+            if (gamepad1.b) {
+                pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+
+                slideDown = false;
+
+                updown_wrist_position = 0.500;
+
+                leftRotate.setTargetPosition(-2500);
+                leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                leftRotate.setPower(-1);
+
+                currentState = RobotState.IDLE;
+            }
+
             // Bring slide down
             if (gamepad1.left_trigger > 0.5) {
 
@@ -222,8 +237,8 @@ public class IntoTheDeep extends LinearOpMode {
                     currentState = RobotState.IDLE;
                 }
             }
-            // Bring rotation down
-            else if (gamepad1.right_trigger > 0.5) {
+            // Bring rotation down | ENSURE that the right and the left slides are down before the rotation as well.
+            else if (gamepad1.right_trigger > 0.5 && rightSlide.getCurrentPosition() > -1200 && leftSlide.getCurrentPosition() > -1200) {
                 touchSensorEnabled = true;
 
                 pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;

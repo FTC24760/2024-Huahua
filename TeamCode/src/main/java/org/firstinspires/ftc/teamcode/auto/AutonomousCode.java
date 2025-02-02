@@ -14,12 +14,13 @@ public class AutonomousCode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(0));
+        Pose2d initialPose = new Pose2d(12, 60, Math.toRadians(180));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
 
         Action goToBasket = drive.actionBuilder(initialPose)
-                .splineTo(new Vector2d(50, 0), Math.toRadians(50))
+                .setReversed(true)
+                .splineTo(new Vector2d(60, 60), Math.toRadians(45))
                 .build();
 
 
