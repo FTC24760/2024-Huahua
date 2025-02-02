@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
 import java.lang.Math;
 
 @Config
-@Autonomous(name = "AUTO CODE 2024", group = "Autonomous")
+@Autonomous(name = "Autonomous 2024-2025", group = "Autonomous")
 public class AutonomousCode extends LinearOpMode {
 
     @Override
