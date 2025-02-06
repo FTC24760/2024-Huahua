@@ -194,7 +194,7 @@ public class IntoTheDeep extends LinearOpMode {
 
                 updown_wrist_position = 0.500;
 
-                leftRotate.setTargetPosition(-2650);
+                leftRotate.setTargetPosition(-2700);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
@@ -209,7 +209,7 @@ public class IntoTheDeep extends LinearOpMode {
 
                 updown_wrist_position = 0.500;
 
-                leftRotate.setTargetPosition(-2650);
+                leftRotate.setTargetPosition(-2700);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
