@@ -238,7 +238,7 @@ public class IntoTheDeep extends LinearOpMode {
                 }
             }
             // Bring rotation down | ENSURE that the right and the left slides are down before the rotation as well.
-            else if (gamepad1.right_trigger > 0.5 && rightSlide.getCurrentPosition() > -1200 && leftSlide.getCurrentPosition() > -1200) {
+            else if (gamepad1.right_trigger > 0.5 && rightSlide.getCurrentPosition() < 1200 && leftSlide.getCurrentPosition() < 1200) {
                 touchSensorEnabled = true;
 
                 pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
