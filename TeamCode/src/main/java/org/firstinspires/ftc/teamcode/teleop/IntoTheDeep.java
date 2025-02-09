@@ -284,7 +284,7 @@ public class IntoTheDeep extends LinearOpMode {
 
             // TODO Hang preset
             // Level 2 ascent (WIP)
-            if (gamepad1.a) {
+            /*if (gamepad1.a) {
                 slideDown = false;
 
                 leftRotate.setTargetPosition(-3140);
@@ -292,7 +292,7 @@ public class IntoTheDeep extends LinearOpMode {
                 leftRotate.setPower(-1);
 
                 currentState = RobotState.ROTATING;
-            }
+            }*/
 
             // Claw opening/closing
             if (gamepad2.y && !xPressed) {

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.*;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.roadrunner.PinpointDrive;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.Math;
 
@@ -63,12 +65,17 @@ public class AutonomousCode extends LinearOpMode {
 
         Action goToBasket = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(54, 54), Math.toRadians(45))
+                .splineTo(new Vector2d(56, 54), Math.toRadians(45))
                 .build();
 
         Action pickUpMiddleSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineTo(new Vector2d(4, 51), Math.toRadians(225))
+                .splineTo(new Vector2d(-3, 54), Math.toRadians(230))
+                .build();
+
+        Action goBackToBasket = drive.actionBuilder(initialPose)
+                .setReversed(true)
+                .splineTo(new Vector2d(54, 54), Math.toRadians(45))
                 .build();
 
 
@@ -119,6 +126,10 @@ public class AutonomousCode extends LinearOpMode {
         // wait for a sec
         sleep(250);
 
+        leftRotate.setTargetPosition(400);
+        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRotate.setPower(1);
+
         // bring slide back down
         leftSlide.setTargetPosition(0);
         rightSlide.setTargetPosition(0);
@@ -133,7 +144,24 @@ public class AutonomousCode extends LinearOpMode {
 
 
         // -- Pick up ground sample 1 --
-        Actions.runBlocking(pickUpMiddleSample);
+
+        Actions.runBlocking(new ParallelAction(
+                pickUpMiddleSample,
+                new Action() {
+                    @Override
+                    public boolean run(@NotNull TelemetryPacket telemetryPacket) {
+                        leftRotate.setTargetPosition(2500);
+                        leftRotate.setPower(1);
+                        clawLeft.setPosition(0.4);
+                        clawRight.setPosition(0.5);
+                        updown_wrist.setPosition(0.365);
+                        wrist.setPosition(0.07);
+                        return true;
+                    }
+                }
+        ));
+
+
 
 
 
