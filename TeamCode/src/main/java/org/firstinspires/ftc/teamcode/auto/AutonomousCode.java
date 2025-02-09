@@ -68,14 +68,14 @@ public class AutonomousCode extends LinearOpMode {
                 .splineTo(new Vector2d(56, 54), Math.toRadians(45))
                 .build();
 
-        Action pickUpMiddleSample = drive.actionBuilder(initialPose)
+        Action pickUpFarSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
                 .splineTo(new Vector2d(-3, 54), Math.toRadians(230))
                 .build();
 
         Action goBackToBasket = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(54, 54), Math.toRadians(45))
+                .splineTo(new Vector2d(26, 54), Math.toRadians(305))
                 .build();
 
 
@@ -146,25 +146,98 @@ public class AutonomousCode extends LinearOpMode {
         // -- Pick up ground sample 1 --
 
         Actions.runBlocking(new ParallelAction(
-                pickUpMiddleSample,
+                pickUpFarSample,
                 new Action() {
                     @Override
                     public boolean run(@NotNull TelemetryPacket telemetryPacket) {
-                        leftRotate.setTargetPosition(2500);
+                        leftRotate.setTargetPosition(2600);
                         leftRotate.setPower(1);
                         clawLeft.setPosition(0.4);
                         clawRight.setPosition(0.5);
                         updown_wrist.setPosition(0.365);
                         wrist.setPosition(0.07);
+                        if (Math.abs(leftRotate.getCurrentPosition() - 2600) < 10) {
+                            return false;
+                        }
                         return true;
                     }
                 }
         ));
 
+        // Close claw
+        clawLeft.setPosition(0.7);
+        clawRight.setPosition(0.2);
+        sleep(250);
 
+        updown_wrist.setPosition(0.5);
+        wrist.setPosition(0.07);
 
+        // -- Go back to basket
+        Actions.runBlocking(new ParallelAction(
+                goBackToBasket,
+                new Action() {
+                    @Override
+                    public boolean run(@NotNull TelemetryPacket telemetryPacket) {
+                        leftRotate.setTargetPosition(-100);
+                        leftRotate.setPower(-1);
+                        if (Math.abs(leftRotate.getCurrentPosition() + 100) < 10) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+        ));
 
+        // MOVE SLIDE UP
+        leftSlide.setTargetPosition(4150);
+        rightSlide.setTargetPosition(4150);
 
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        leftSlide.setPower(1);
+        rightSlide.setPower(1);
+
+        // wait
+        sleep(1500);
+
+        // move rotate
+        updown_wrist.setPosition(1);
+        wrist.setPosition(0.64);
+
+        // Wait a bit more
+        sleep(1000);
+
+        // Open claw
+        clawLeft.setPosition(0.4);
+        clawRight.setPosition(0.5);
+
+        sleep(250);
+
+        // Close claw
+        clawLeft.setPosition(0.7);
+        clawRight.setPosition(0.2);
+
+        updown_wrist.setPosition(0.69);
+        wrist.setPosition(0.05);
+
+        // wait for a sec
+        sleep(250);
+
+        leftRotate.setTargetPosition(400);
+        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRotate.setPower(1);
+
+        // bring slide back down
+        leftSlide.setTargetPosition(0);
+        rightSlide.setTargetPosition(0);
+
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftSlide.setPower(-1);
+        rightSlide.setPower(-1);
+
+        sleep(2500);
     }
 }
