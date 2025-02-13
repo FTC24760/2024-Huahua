@@ -73,15 +73,21 @@ public class AutonomousCode extends LinearOpMode {
                 .splineTo(new Vector2d(-2.5, 52), Math.toRadians(230))
                 .build();
 
-        Action goBackToBasket = drive.actionBuilder(initialPose)
+        Action goBackToBasket1 = drive.actionBuilder(initialPose)
                 .setReversed(true)
                 .splineTo(new Vector2d(29, 57), Math.toRadians(310))
                 .build();
 
         Action pickUpMiddleSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineTo(new Vector2d(-2.5, 52), Math.toRadians(230))
+                .splineTo(new Vector2d(6, 52), Math.toRadians(230))
                 .build();
+
+        Action goBackToBasket2 = drive.actionBuilder(initialPose)
+                .setReversed(true)
+                .splineTo(new Vector2d(29, 57), Math.toRadians(310))
+                .build();
+
 
 
         waitForStart();
@@ -186,7 +192,106 @@ public class AutonomousCode extends LinearOpMode {
 
         // -- Go back to basket
         Actions.runBlocking(new ParallelAction(
-                goBackToBasket,
+                goBackToBasket1,
+                new Action() {
+                    @Override
+                    public boolean run(@NotNull TelemetryPacket telemetryPacket) {
+                        leftRotate.setTargetPosition(-100);
+                        leftRotate.setPower(-1);
+                        if (Math.abs(leftRotate.getCurrentPosition() + 100) < 10) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+        ));
+
+        // MOVE SLIDE UP
+        leftSlide.setTargetPosition(4150);
+        rightSlide.setTargetPosition(4150);
+
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftSlide.setPower(1);
+        rightSlide.setPower(1);
+
+        // wait
+        sleep(1500);
+
+        // move rotate
+        updown_wrist.setPosition(1);
+        wrist.setPosition(0.64);
+
+        // Wait a bit more
+        sleep(1000);
+
+        // Open claw
+        clawLeft.setPosition(0.4);
+        clawRight.setPosition(0.5);
+
+        sleep(250);
+
+        // Close claw
+        clawLeft.setPosition(0.7);
+        clawRight.setPosition(0.2);
+
+        updown_wrist.setPosition(0.69);
+        wrist.setPosition(0.05);
+
+        // wait for a sec
+        sleep(250);
+
+        leftRotate.setTargetPosition(400);
+        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftRotate.setPower(1);
+
+        // bring slide back down
+        leftSlide.setTargetPosition(0);
+        rightSlide.setTargetPosition(0);
+
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftSlide.setPower(-1);
+        rightSlide.setPower(-1);
+
+        sleep(2500);
+
+        // -- Pick up ground sample 2 --
+
+        Actions.runBlocking(new ParallelAction(
+                pickUpMiddleSample,
+                new Action() {
+                    @Override
+                    public boolean run(@NotNull TelemetryPacket telemetryPacket) {
+                        leftRotate.setTargetPosition(2600);
+                        leftRotate.setPower(1);
+                        clawLeft.setPosition(0.4);
+                        clawRight.setPosition(0.5);
+                        updown_wrist.setPosition(0.405);
+                        wrist.setPosition(0.02);
+                        if (Math.abs(leftRotate.getCurrentPosition() - 2600) < 10) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+        ));
+
+        sleep(200);
+
+        // Close claw
+        clawLeft.setPosition(0.7);
+        clawRight.setPosition(0.2);
+        sleep(250);
+
+        updown_wrist.setPosition(0.5);
+        wrist.setPosition(0.07);
+
+        // -- Go back to basket
+        Actions.runBlocking(new ParallelAction(
+                goBackToBasket2,
                 new Action() {
                     @Override
                     public boolean run(@NotNull TelemetryPacket telemetryPacket) {
