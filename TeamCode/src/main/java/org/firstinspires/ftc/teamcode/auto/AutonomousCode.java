@@ -70,12 +70,17 @@ public class AutonomousCode extends LinearOpMode {
 
         Action pickUpFarSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineTo(new Vector2d(-3, 54), Math.toRadians(230))
+                .splineTo(new Vector2d(-2.5, 52), Math.toRadians(230))
                 .build();
 
         Action goBackToBasket = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(26, 54), Math.toRadians(305))
+                .splineTo(new Vector2d(29, 57), Math.toRadians(310))
+                .build();
+
+        Action pickUpMiddleSample = drive.actionBuilder(initialPose)
+                .setReversed(false)
+                .splineTo(new Vector2d(-2.5, 52), Math.toRadians(230))
                 .build();
 
 
@@ -89,6 +94,7 @@ public class AutonomousCode extends LinearOpMode {
 
         // GO TO BASKET
         Actions.runBlocking(goToBasket);
+
 
         // MOVE SLIDE UP
         leftSlide.setTargetPosition(4150);
@@ -120,15 +126,18 @@ public class AutonomousCode extends LinearOpMode {
         clawLeft.setPosition(0.7);
         clawRight.setPosition(0.2);
 
+
         updown_wrist.setPosition(0.69);
         wrist.setPosition(0.05);
 
         // wait for a sec
         sleep(250);
 
+
         leftRotate.setTargetPosition(400);
         leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftRotate.setPower(1);
+
 
         // bring slide back down
         leftSlide.setTargetPosition(0);
@@ -139,6 +148,7 @@ public class AutonomousCode extends LinearOpMode {
 
         leftSlide.setPower(-1);
         rightSlide.setPower(-1);
+
 
         sleep(2500);
 
@@ -154,8 +164,8 @@ public class AutonomousCode extends LinearOpMode {
                         leftRotate.setPower(1);
                         clawLeft.setPosition(0.4);
                         clawRight.setPosition(0.5);
-                        updown_wrist.setPosition(0.365);
-                        wrist.setPosition(0.07);
+                        updown_wrist.setPosition(0.405);
+                        wrist.setPosition(0.02);
                         if (Math.abs(leftRotate.getCurrentPosition() - 2600) < 10) {
                             return false;
                         }
@@ -163,6 +173,8 @@ public class AutonomousCode extends LinearOpMode {
                     }
                 }
         ));
+
+        sleep(200);
 
         // Close claw
         clawLeft.setPosition(0.7);
