@@ -32,11 +32,30 @@ public class AutonomousCode extends LinearOpMode {
     private Servo clawLeft;
     private Servo clawRight;
 
-    public static double FARX = 27;
-    public static double FARY = 60;
-    public static double FARANGLE = 330;
+    // ---Positions---
+
+    // Basket 1 (preload)
+    public static Vector2d BASKET1_POSE = new Vector2d(56, 54);
+    public static double BASKET1_TANGENT = Math.toRadians(45);
+
+    // Far sample pickup (2)
+    public static Vector2d FAR_SAMPLE_POSE = new Vector2d(-6, 62);
+    public static double FAR_SAMPLE_TANGENT = Math.toRadians(210);
+
+    // Basket 2 (deposit)
+    public static Vector2d BASKET2_POSE = new Vector2d(23.5, 46.5);
+    public static double BASKET2_TANGENT = Math.toRadians(305);
+
+    // Middle sample pickup (3)
+    public static Vector2d MIDDLE_SAMPLE_POSE = new Vector2d(4, 47);
+    public static double MIDDLE_SAMPLE_TANGENT = Math.toRadians(305);
+
+    // Basket 3 (deposit)
+    public static Vector2d BASKET3_POSE = new Vector2d(27, 60);
+    public static double BASKET3_TANGENT = Math.toRadians(330);
 
 
+    // RUNNING OPMODE
 
     @Override
     public void runOpMode() {
@@ -70,27 +89,27 @@ public class AutonomousCode extends LinearOpMode {
 
         Action goToBasket = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(56, 54), Math.toRadians(45))
+                .splineTo(BASKET1_POSE, BASKET1_TANGENT)
                 .build();
 
         Action pickUpFarSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineTo(new Vector2d(-6, 62), Math.toRadians(210))
+                .splineTo(FAR_SAMPLE_POSE, FAR_SAMPLE_TANGENT)
                 .build();
 
         Action goBackToBasket1 = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(23.5, 46.5), Math.toRadians(305))
+                .splineTo(BASKET2_POSE, BASKET2_TANGENT)
                 .build();
 
         Action pickUpMiddleSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineTo(new Vector2d(4, 47), Math.toRadians(230))
+                .splineTo(MIDDLE_SAMPLE_POSE, MIDDLE_SAMPLE_TANGENT)
                 .build();
 
         Action goBackToBasket2 = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(FARX, FARY), Math.toRadians(FARANGLE))
+                .splineTo(BASKET3_POSE, BASKET3_TANGENT)
                 .build();
 
 
