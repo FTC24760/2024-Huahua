@@ -50,7 +50,7 @@ public class AutonomousCode extends LinearOpMode {
     public static double BASKET2_TANGENT = Math.toRadians(305);
 
     // Middle sample pickup (3)
-    public static Vector2d MIDDLE_SAMPLE_POSE = new Vector2d(6, 45);
+    public static Vector2d MIDDLE_SAMPLE_POSE = new Vector2d(4, 45);
     public static double MIDDLE_SAMPLE_TANGENT = Math.toRadians(230);
 
     // Basket 3 (deposit)
@@ -123,6 +123,7 @@ public class AutonomousCode extends LinearOpMode {
         // CLOSE CLAW
         clawLeft.setPosition(0.7);
         clawRight.setPosition(0.2);
+
 
         // GO TO BASKET
         Actions.runBlocking(goToBasket);
@@ -382,6 +383,8 @@ public class AutonomousCode extends LinearOpMode {
         rightSlide.setPower(-1);
 
         sleep(2500);
+
+
 
 
 
