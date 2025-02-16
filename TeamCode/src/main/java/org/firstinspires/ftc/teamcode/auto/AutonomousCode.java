@@ -50,8 +50,8 @@ public class AutonomousCode extends LinearOpMode {
     public static double BASKET2_TANGENT = Math.toRadians(305);
 
     // Middle sample pickup (3)
-    public static Vector2d MIDDLE_SAMPLE_POSE = new Vector2d(4, 47);
-    public static double MIDDLE_SAMPLE_TANGENT = Math.toRadians(305);
+    public static Vector2d MIDDLE_SAMPLE_POSE = new Vector2d(6, 45);
+    public static double MIDDLE_SAMPLE_TANGENT = Math.toRadians(230);
 
     // Basket 3 (deposit)
     public static Vector2d BASKET3_POSE = new Vector2d(27, 60);
