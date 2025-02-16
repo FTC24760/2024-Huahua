@@ -32,6 +32,11 @@ public class AutonomousCode extends LinearOpMode {
     private Servo clawLeft;
     private Servo clawRight;
 
+    public static double FARX = 27;
+    public static double FARY = 60;
+    public static double FARANGLE = 330;
+
+
 
     @Override
     public void runOpMode() {
@@ -70,22 +75,22 @@ public class AutonomousCode extends LinearOpMode {
 
         Action pickUpFarSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineTo(new Vector2d(-2.5, 52), Math.toRadians(230))
+                .splineTo(new Vector2d(-6, 62), Math.toRadians(210))
                 .build();
 
         Action goBackToBasket1 = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(29, 57), Math.toRadians(310))
+                .splineTo(new Vector2d(23.5, 46.5), Math.toRadians(305))
                 .build();
 
         Action pickUpMiddleSample = drive.actionBuilder(initialPose)
                 .setReversed(false)
-                .splineTo(new Vector2d(6, 52), Math.toRadians(230))
+                .splineTo(new Vector2d(4, 47), Math.toRadians(230))
                 .build();
 
         Action goBackToBasket2 = drive.actionBuilder(initialPose)
                 .setReversed(true)
-                .splineTo(new Vector2d(29, 57), Math.toRadians(310))
+                .splineTo(new Vector2d(FARX, FARY), Math.toRadians(FARANGLE))
                 .build();
 
 
@@ -170,7 +175,7 @@ public class AutonomousCode extends LinearOpMode {
                         leftRotate.setPower(1);
                         clawLeft.setPosition(0.4);
                         clawRight.setPosition(0.5);
-                        updown_wrist.setPosition(0.405);
+                        updown_wrist.setPosition(0.4);
                         wrist.setPosition(0.02);
                         if (Math.abs(leftRotate.getCurrentPosition() - 2600) < 10) {
                             return false;
@@ -356,5 +361,7 @@ public class AutonomousCode extends LinearOpMode {
         rightSlide.setPower(-1);
 
         sleep(2500);
+
+
     }
 }
