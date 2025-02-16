@@ -34,13 +34,16 @@ public class AutonomousCode extends LinearOpMode {
 
     // ---Positions---
 
+    // Starting
+    public static Pose2d initialPose = new Pose2d(12, 60, Math.toRadians(180));
+
     // Basket 1 (preload)
     public static Vector2d BASKET1_POSE = new Vector2d(56, 54);
     public static double BASKET1_TANGENT = Math.toRadians(45);
 
     // Far sample pickup (2)
     public static Vector2d FAR_SAMPLE_POSE = new Vector2d(-6, 62);
-    public static double FAR_SAMPLE_TANGENT = Math.toRadians(210);
+    public static double FAR_SAMPLE_TANGENT = Math.toRadians(215);
 
     // Basket 2 (deposit)
     public static Vector2d BASKET2_POSE = new Vector2d(23.5, 46.5);
@@ -59,7 +62,6 @@ public class AutonomousCode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(12, 60, Math.toRadians(180));
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
         // Slide
@@ -380,6 +382,7 @@ public class AutonomousCode extends LinearOpMode {
         rightSlide.setPower(-1);
 
         sleep(2500);
+
 
 
     }
