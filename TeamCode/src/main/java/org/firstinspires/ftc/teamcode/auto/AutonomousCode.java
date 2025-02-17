@@ -35,26 +35,26 @@ public class AutonomousCode extends LinearOpMode {
     // ---Positions---
 
     // Starting
-    public static Pose2d initialPose = new Pose2d(12, 60, Math.toRadians(180));
+    public static Pose2d initialPose = new Pose2d(0, 0, Math.toRadians(180));
 
     // Basket 1 (preload)
-    public static Vector2d BASKET1_POSE = new Vector2d(56, 54);
+    public static Vector2d BASKET1_POSE = new Vector2d(44, -6);
     public static double BASKET1_TANGENT = Math.toRadians(45);
 
     // Far sample pickup (2)
-    public static Vector2d FAR_SAMPLE_POSE = new Vector2d(-6, 62);
-    public static double FAR_SAMPLE_TANGENT = Math.toRadians(215);
+    public static Vector2d FAR_SAMPLE_POSE = new Vector2d(-18, 2);
+    public static double FAR_SAMPLE_TANGENT = Math.toRadians(205);
 
     // Basket 2 (deposit)
-    public static Vector2d BASKET2_POSE = new Vector2d(23.5, 46.5);
+    public static Vector2d BASKET2_POSE = new Vector2d(11.5, -13.5);
     public static double BASKET2_TANGENT = Math.toRadians(305);
 
     // Middle sample pickup (3)
-    public static Vector2d MIDDLE_SAMPLE_POSE = new Vector2d(4, 45);
+    public static Vector2d MIDDLE_SAMPLE_POSE = new Vector2d(-10, -10);
     public static double MIDDLE_SAMPLE_TANGENT = Math.toRadians(230);
 
     // Basket 3 (deposit)
-    public static Vector2d BASKET3_POSE = new Vector2d(27, 60);
+    public static Vector2d BASKET3_POSE = new Vector2d(15, 0);
     public static double BASKET3_TANGENT = Math.toRadians(330);
 
 
