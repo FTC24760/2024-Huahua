@@ -42,7 +42,7 @@ public class AutonomousCode extends LinearOpMode {
     public static double BASKET1_TANGENT = Math.toRadians(45);
 
     // Far sample pickup (2)
-    public static Vector2d FAR_SAMPLE_POSE = new Vector2d(-18, 2);
+    public static Vector2d FAR_SAMPLE_POSE = new Vector2d(28, 40);
     public static double FAR_SAMPLE_TANGENT = Math.toRadians(205);
 
     // Basket 2 (deposit)
@@ -62,6 +62,8 @@ public class AutonomousCode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        Pose2d currPos;
+
         PinpointDrive drive = new PinpointDrive(hardwareMap, initialPose);
 
         // Slide
@@ -94,10 +96,10 @@ public class AutonomousCode extends LinearOpMode {
                 .splineTo(BASKET1_POSE, BASKET1_TANGENT)
                 .build();
 
-        Action pickUpFarSample = drive.actionBuilder(initialPose)
-                .setReversed(false)
-                .splineTo(FAR_SAMPLE_POSE, FAR_SAMPLE_TANGENT)
-                .build();
+        //Action pickUpFarSample = drive.actionBuilder(initialPose)
+        //        .setReversed(false)
+        //        .splineTo(FAR_SAMPLE_POSE, FAR_SAMPLE_TANGENT)
+        //        .build();
 
         Action goBackToBasket1 = drive.actionBuilder(initialPose)
                 .setReversed(true)
@@ -185,6 +187,13 @@ public class AutonomousCode extends LinearOpMode {
 
         sleep(2500);
 
+        // get last position
+        currPos = drive.poseHistory.getLast();
+        //currPos.
+        Action pickUpFarSample = drive.actionBuilder(initialPose)
+                .setReversed(false)
+                .splineTo(currPos.position.minus(FAR_SAMPLE_POSE), FAR_SAMPLE_TANGENT)
+                .build();
 
         // -- Pick up ground sample 1 --
 
@@ -206,6 +215,7 @@ public class AutonomousCode extends LinearOpMode {
                     }
                 }
         ));
+        /*
 
         sleep(200);
 
@@ -383,6 +393,8 @@ public class AutonomousCode extends LinearOpMode {
         rightSlide.setPower(-1);
 
         sleep(2500);
+
+         */
 
 
 
