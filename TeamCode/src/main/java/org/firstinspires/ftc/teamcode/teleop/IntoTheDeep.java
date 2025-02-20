@@ -320,14 +320,14 @@ public class IntoTheDeep extends LinearOpMode {
             if (gamepad2.left_stick_y < -0.1) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
 
-                if (updown_wrist_position > 0) {
-                    updown_wrist_position -= 0.01;
+                if (updown_wrist_position < 1) {
+                    updown_wrist_position += 0.01;
                 }
             } else if (gamepad2.left_stick_y > 0.1) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
 
-                if (updown_wrist_position < 1) {
-                    updown_wrist_position += 0.01;
+                if (updown_wrist_position > 0) {
+                    updown_wrist_position -= 0.01;
                 }
             }
 

@@ -32,6 +32,9 @@ public class AutonomousCode extends LinearOpMode {
     private Servo clawLeft;
     private Servo clawRight;
 
+    // Wall servo
+    private Servo wallServo;
+
     // ---Positions---
 
     // Starting
@@ -90,6 +93,9 @@ public class AutonomousCode extends LinearOpMode {
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
+        // Wall servo
+        wallServo = hardwareMap.get(Servo.class, "wallServo");
+
 
         Action goToBasket = drive.actionBuilder(initialPose)
                 .setReversed(true)
@@ -121,6 +127,8 @@ public class AutonomousCode extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+        wallServo.setPosition(1);
 
         // CLOSE CLAW
         clawLeft.setPosition(0.7);
