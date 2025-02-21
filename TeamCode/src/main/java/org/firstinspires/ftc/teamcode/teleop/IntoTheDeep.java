@@ -293,17 +293,25 @@ public class IntoTheDeep extends LinearOpMode {
             }
 
 
-            // TODO Hang preset
-            // Level 2 ascent (WIP)
-            /*if (gamepad1.a) {
+            // Level 2 ascent
+            if (gamepad1.a) {
                 slideDown = false;
 
-                leftRotate.setTargetPosition(-3140);
+                leftRotate.setTargetPosition(-3000);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
+                leftSlide.setTargetPosition(1800);
+                rightSlide.setTargetPosition(1800);
+
+                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftSlide.setPower(1);
+                rightSlide.setPower(1);
+
                 currentState = RobotState.ROTATING;
-            }*/
+            }
 
             // Claw opening/closing
             if (gamepad2.y && !xPressed) {
