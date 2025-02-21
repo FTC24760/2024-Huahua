@@ -67,6 +67,9 @@ public class IntoTheDeep extends LinearOpMode {
     private Servo clawLeft;
     private Servo clawRight;
 
+    // Servo for lining up autonomous
+    private Servo wallServo;
+
 
     // ------ Robot State Enum ------
     private enum RobotState {
@@ -134,6 +137,9 @@ public class IntoTheDeep extends LinearOpMode {
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
+        //servo to line up for autonomous
+        wallServo = hardwareMap.get(Servo.class, "wallServo");
+
         // Touch Sensor
         touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
 
@@ -153,6 +159,9 @@ public class IntoTheDeep extends LinearOpMode {
 
         // --- Main Loop ---
         while (opModeIsActive()) {
+
+            wallServo.setPosition(1);
+
             // Touch Sensor - Reset Rotation Encoder
             if (touchSensorEnabled) {
                 if (touchSensor.isPressed()) {
@@ -194,7 +203,7 @@ public class IntoTheDeep extends LinearOpMode {
 
                 updown_wrist_position = 0.500;
 
-                leftRotate.setTargetPosition(-2560);
+                leftRotate.setTargetPosition(-2600);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
@@ -209,7 +218,7 @@ public class IntoTheDeep extends LinearOpMode {
 
                 updown_wrist_position = 0.500;
 
-                leftRotate.setTargetPosition(-2560);
+                leftRotate.setTargetPosition(-2600);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
 
@@ -221,7 +230,7 @@ public class IntoTheDeep extends LinearOpMode {
 
                 pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
 
-                updown_wrist_position = 0.69;
+                updown_wrist_position = 0.58;
                 wrist_position = 0.05;
 
                 leftSlide.setTargetPosition(0);
@@ -238,7 +247,7 @@ public class IntoTheDeep extends LinearOpMode {
                 }
             }
             // Bring rotation down | ENSURE that the right and the left slides are down before the rotation as well.
-            else if (gamepad1.right_trigger > 0.5 && rightSlide.getCurrentPosition() > -1200 && leftSlide.getCurrentPosition() > -1200) {
+            else if (gamepad1.right_trigger > 0.5 && rightSlide.getCurrentPosition() < 1200 && leftSlide.getCurrentPosition() < 1200) {
                 touchSensorEnabled = true;
 
                 pattern = RevBlinkinLedDriver.BlinkinPattern.ORANGE;
@@ -259,8 +268,9 @@ public class IntoTheDeep extends LinearOpMode {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
 
                 wrist_position = 0.04;
-                updown_wrist_position = 0.415;
+                updown_wrist_position = 0.4;
             }
+
             // Intake - move slide out
             else if (gamepad1.y) {
                 touchSensorEnabled = false;
@@ -269,7 +279,7 @@ public class IntoTheDeep extends LinearOpMode {
                 slideDown = true;
 
                 wrist_position = 0.04;
-                updown_wrist_position = 0.415;
+                updown_wrist_position = 0.395;
 
                 leftSlide.setTargetPosition(1000);
                 rightSlide.setTargetPosition(1000);
@@ -279,17 +289,26 @@ public class IntoTheDeep extends LinearOpMode {
 
                 leftSlide.setPower(1);
                 rightSlide.setPower(1);
+
             }
 
 
-            // TODO Hang preset
-            // Level 2 ascent (WIP)
+            // Level 2 ascent
             if (gamepad1.a) {
                 slideDown = false;
 
-                leftRotate.setTargetPosition(-3140);
+                leftRotate.setTargetPosition(-3000);
                 leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 leftRotate.setPower(-1);
+
+                leftSlide.setTargetPosition(1800);
+                rightSlide.setTargetPosition(1800);
+
+                leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                leftSlide.setPower(1);
+                rightSlide.setPower(1);
 
                 currentState = RobotState.ROTATING;
             }
@@ -309,14 +328,14 @@ public class IntoTheDeep extends LinearOpMode {
             if (gamepad2.left_stick_y < -0.1) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
 
-                if (updown_wrist_position > 0) {
-                    updown_wrist_position -= 0.01;
+                if (updown_wrist_position < 1) {
+                    updown_wrist_position += 0.01;
                 }
             } else if (gamepad2.left_stick_y > 0.1) {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.AQUA;
 
-                if (updown_wrist_position < 1) {
-                    updown_wrist_position += 0.01;
+                if (updown_wrist_position > 0) {
+                    updown_wrist_position -= 0.01;
                 }
             }
 
@@ -409,6 +428,7 @@ public class IntoTheDeep extends LinearOpMode {
 
             // State management
             switch (currentState) {
+
                 case ROTATING:
                     if (!leftRotate.isBusy()) {
                         currentState = RobotState.WAITING;
@@ -457,11 +477,11 @@ public class IntoTheDeep extends LinearOpMode {
             // Blinkin
             blinkinLedDriver.setPattern(pattern);
 
-
             // Telemetry
             telemetry.addData("State", currentState);
 
             telemetry.addData("Left Rotate Position", leftRotate.getCurrentPosition());
+            telemetry.addData("Left Slide Position", leftSlide.getCurrentPosition());
 
             telemetry.addData("Up/Down Wrist Position", updown_wrist.getPosition());
             telemetry.addData("Left/Right Wrist Position", wrist.getPosition());
@@ -471,6 +491,10 @@ public class IntoTheDeep extends LinearOpMode {
 
             telemetry.addData("Left Slide Position", leftSlide.getCurrentPosition());
             telemetry.addData("Right Slide Position", rightSlide.getCurrentPosition());
+
+
+
+            telemetry.addData("Wall Servo Position", wallServo.getPosition());
 
             telemetry.update();
         }
