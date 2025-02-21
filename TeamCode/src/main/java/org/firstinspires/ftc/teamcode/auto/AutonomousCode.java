@@ -133,8 +133,24 @@ public class AutonomousCode extends LinearOpMode {
         clawRight.setPosition(0.2);
 
 
+        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         // GO TO BASKET
-        Actions.runBlocking(goToBasket);
+        Actions.runBlocking(new ParallelAction(
+                goToBasket,
+                new Action() {
+                    @Override
+                    public boolean run(@NotNull TelemetryPacket telemetryPacket) {
+                        leftRotate.setTargetPosition(-1280);
+                        leftRotate.setPower(-1);
+                        if (Math.abs(leftRotate.getCurrentPosition() + 1200) < 10) {
+                            leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+        ));
 
 
         // MOVE SLIDE UP
