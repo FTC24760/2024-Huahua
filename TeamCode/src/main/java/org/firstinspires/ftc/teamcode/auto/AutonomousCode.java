@@ -143,7 +143,7 @@ public class AutonomousCode extends LinearOpMode {
                     public boolean run(@NotNull TelemetryPacket telemetryPacket) {
                         leftRotate.setTargetPosition(-1280);
                         leftRotate.setPower(-1);
-                        if (Math.abs(leftRotate.getCurrentPosition() + 1200) < 10) {
+                        if (Math.abs(leftRotate.getCurrentPosition() + 1280) < 10) {
                             leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                             return false;
                         }
