@@ -132,9 +132,6 @@ public class AutonomousCode extends LinearOpMode {
         clawLeft.setPosition(0.7);
         clawRight.setPosition(0.2);
 
-
-        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         // GO TO BASKET
         Actions.runBlocking(new ParallelAction(
                 goToBasket,
@@ -142,6 +139,7 @@ public class AutonomousCode extends LinearOpMode {
                     @Override
                     public boolean run(@NotNull TelemetryPacket telemetryPacket) {
                         leftRotate.setTargetPosition(-1280);
+                        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         leftRotate.setPower(-1);
                         if (Math.abs(leftRotate.getCurrentPosition() + 1280) < 10) {
                             leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
